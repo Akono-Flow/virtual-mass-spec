@@ -1,0 +1,621 @@
+{
+  "version": "1.2",
+  "description": "Mass spectral data for educational Mass Spectrometry simulator. Add compounds following the schema below. Peak ion types: molecular, base, fragment, isotope, mplus1, mplus2.",
+  "schema": {
+    "id": "string (unique, no spaces)",
+    "name": "string",
+    "formula": "string (unicode subscripts)",
+    "molecularFormula": "string (plain text)",
+    "molecularMass": "number",
+    "series": "string (group name)",
+    "iupacName": "string",
+    "description": "string",
+    "keyFeatures": ["array of strings for learning highlights"],
+    "peaks": [
+      {
+        "mz": "number",
+        "relativeAbundance": "number (0-100, base peak = 100)",
+        "ionFormula": "string",
+        "ionType": "molecular|base|fragment|isotope|mplus1|mplus2",
+        "label": "string (short label for chart)",
+        "fragmentLabel": "string (detailed ion name)",
+        "explanation": "string (pedagogical explanation)"
+      }
+    ]
+  },
+  "compounds": [
+    {
+      "id": "boron",
+      "name": "Boron",
+      "formula": "B",
+      "molecularFormula": "B",
+      "molecularMass": 10,
+      "series": "Elements & Isotope Patterns",
+      "iupacName": "Boron",
+      "description": "Boron has two stable isotopes: ¹⁰B and ¹¹B. This element beautifully demonstrates how mass spectra reveal isotopic composition. The more abundant ¹¹B peak is assigned 100% and ¹⁰B appears at about 24.8%.",
+      "keyFeatures": ["Two stable isotopes", "¹¹B is the more abundant isotope", "Demonstrates isotope pattern recognition", "Used to calculate relative atomic mass"],
+      "peaks": [
+        { "mz": 10, "relativeAbundance": 24.8, "ionFormula": "¹⁰B⁺", "ionType": "isotope", "label": "¹⁰B", "fragmentLabel": "Boron-10 ion (¹⁰B⁺)", "explanation": "The lighter isotope of boron (¹⁰B). Natural abundance is 19.8%. Relative to the base peak (¹¹B = 100%), this peak appears at ~24.8%. Mass = 10 amu." },
+        { "mz": 11, "relativeAbundance": 100, "ionFormula": "¹¹B⁺", "ionType": "base", "label": "¹¹B (base)", "fragmentLabel": "Boron-11 ion (¹¹B⁺)", "explanation": "The more abundant isotope of boron (¹¹B). Natural abundance is 80.2%. This is the tallest peak (base peak = 100%). Mass = 11 amu. Relative atomic mass of B ≈ 10.8." }
+      ]
+    },
+    {
+      "id": "silicon",
+      "name": "Silicon",
+      "formula": "Si",
+      "molecularFormula": "Si",
+      "molecularMass": 28,
+      "series": "Elements & Isotope Patterns",
+      "iupacName": "Silicon",
+      "description": "Silicon has three stable isotopes: ²⁸Si (92.2%), ²⁹Si (4.7%), and ³⁰Si (3.1%). This gives a mass spectrum with three distinct peaks, all shifted by 1 mass unit from each other.",
+      "keyFeatures": ["Three stable isotopes", "Most abundant at m/z 28", "Demonstrates three-peak isotope pattern", "Ar(Si) ≈ 28.1"],
+      "peaks": [
+        { "mz": 28, "relativeAbundance": 100, "ionFormula": "²⁸Si⁺", "ionType": "base", "label": "²⁸Si", "fragmentLabel": "Silicon-28 ion (²⁸Si⁺)", "explanation": "The most abundant silicon isotope (92.2%). Assigned 100% as base peak. Contributes most to the relative atomic mass calculation." },
+        { "mz": 29, "relativeAbundance": 5.1, "ionFormula": "²⁹Si⁺", "ionType": "isotope", "label": "²⁹Si", "fragmentLabel": "Silicon-29 ion (²⁹Si⁺)", "explanation": "The second silicon isotope (4.7% natural abundance). Appears at m/z = 29, just 5.1% relative to the base peak at m/z = 28." },
+        { "mz": 30, "relativeAbundance": 3.4, "ionFormula": "³⁰Si⁺", "ionType": "isotope", "label": "³⁰Si", "fragmentLabel": "Silicon-30 ion (³⁰Si⁺)", "explanation": "The third silicon isotope (3.1% natural abundance). Smallest of the three peaks at m/z = 30. Relative atomic mass of Si = (0.922×28) + (0.047×29) + (0.031×30) = 28.1." }
+      ]
+    },
+    {
+      "id": "germanium",
+      "name": "Germanium",
+      "formula": "Ge",
+      "molecularFormula": "Ge",
+      "molecularMass": 74,
+      "series": "Elements & Isotope Patterns",
+      "iupacName": "Germanium",
+      "description": "Germanium has five stable isotopes spanning m/z 70–76. This complex isotope pattern is a classic example used in CAPE/A-level chemistry to practise Ar calculations. The largest peak (³⁷Ge) is at m/z 74.",
+      "keyFeatures": ["Five stable isotopes", "Base peak at m/z 74", "Complex five-peak pattern", "Ar(Ge) ≈ 72.6"],
+      "peaks": [
+        { "mz": 70, "relativeAbundance": 56.2, "ionFormula": "⁷⁰Ge⁺", "ionType": "isotope", "label": "⁷⁰Ge", "fragmentLabel": "Germanium-70 (20.5% abundance)", "explanation": "⁷⁰Ge has a natural abundance of 20.5%. Expressed relative to the base peak (⁷⁴Ge = 100%), this peak appears at ~56.2%." },
+        { "mz": 72, "relativeAbundance": 75.1, "ionFormula": "⁷²Ge⁺", "ionType": "isotope", "label": "⁷²Ge", "fragmentLabel": "Germanium-72 (27.4% abundance)", "explanation": "⁷²Ge has a natural abundance of 27.4%. Second most abundant isotope of germanium." },
+        { "mz": 73, "relativeAbundance": 21.4, "ionFormula": "⁷³Ge⁺", "ionType": "isotope", "label": "⁷³Ge", "fragmentLabel": "Germanium-73 (7.8% abundance)", "explanation": "⁷³Ge has a natural abundance of 7.8%. Note there is no m/z = 71 peak — only even-mass isotopes dominate here." },
+        { "mz": 74, "relativeAbundance": 100, "ionFormula": "⁷⁴Ge⁺", "ionType": "base", "label": "⁷⁴Ge (base)", "fragmentLabel": "Germanium-74 (36.5% abundance, most abundant)", "explanation": "⁷⁴Ge is the most abundant isotope (36.5%), so it is the base peak at 100%. Ar = (20.5×70 + 27.4×72 + 7.8×73 + 36.5×74 + 7.8×76) / 100 = 72.6." },
+        { "mz": 76, "relativeAbundance": 21.4, "ionFormula": "⁷⁶Ge⁺", "ionType": "isotope", "label": "⁷⁶Ge", "fragmentLabel": "Germanium-76 (7.8% abundance)", "explanation": "⁷⁶Ge has a natural abundance of 7.8%, equal to ⁷³Ge. Note there is no m/z = 75 peak in this pattern." }
+      ]
+    },
+    {
+      "id": "chlorine_gas",
+      "name": "Chlorine Gas (Cl₂)",
+      "formula": "Cl₂",
+      "molecularFormula": "Cl2",
+      "molecularMass": 70,
+      "series": "Elements & Isotope Patterns",
+      "iupacName": "Dichlorine",
+      "description": "The mass spectrum of Cl₂ shows three molecular ion peaks at m/z 70, 72, and 74 in a 9:6:1 ratio, arising from the combinations of ³⁵Cl and ³⁷Cl isotopes. This is the classic demonstration of the M, M+2, M+4 pattern for two halogen atoms.",
+      "keyFeatures": ["M, M+2, M+4 pattern (9:6:1)", "Two ³⁵Cl atoms give m/z 70", "One of each gives m/z 72", "Two ³⁷Cl atoms give m/z 74", "Doubly-charged ions also visible"],
+      "peaks": [
+        { "mz": 35, "relativeAbundance": 100, "ionFormula": "³⁵Cl⁺", "ionType": "base", "label": "³⁵Cl⁺", "fragmentLabel": "Chlorine-35 atomic ion (³⁵Cl⁺)", "explanation": "Atomic chlorine fragment. The singly-charged ³⁵Cl ion. Natural abundance of ³⁵Cl is 75.5%, making it the base peak in the atomic region." },
+        { "mz": 37, "relativeAbundance": 32.5, "ionFormula": "³⁷Cl⁺", "ionType": "isotope", "label": "³⁷Cl⁺", "fragmentLabel": "Chlorine-37 atomic ion (³⁷Cl⁺)", "explanation": "Atomic ³⁷Cl fragment. Natural abundance 24.5%. Ratio of ³⁵Cl⁺ : ³⁷Cl⁺ ≈ 3:1, consistent with natural isotopic abundances." },
+        { "mz": 70, "relativeAbundance": 90, "ionFormula": "³⁵Cl³⁵Cl⁺•", "ionType": "molecular", "label": "M⁺ (³⁵Cl₂)", "fragmentLabel": "Molecular ion ³⁵Cl-³⁵Cl (m/z 70)", "explanation": "Molecular ion with both atoms being ³⁵Cl. Probability ∝ (0.755)² = 0.570. This gives the largest molecular ion peak at m/z = 70. Ratio M:M+2:M+4 = 9:6:1." },
+        { "mz": 72, "relativeAbundance": 59, "ionFormula": "³⁵Cl³⁷Cl⁺•", "ionType": "mplus2", "label": "M+2 (³⁵Cl³⁷Cl)", "fragmentLabel": "Molecular ion ³⁵Cl-³⁷Cl (m/z 72)", "explanation": "M+2 peak: one ³⁵Cl and one ³⁷Cl atom. Can be ³⁵Cl-³⁷Cl or ³⁷Cl-³⁵Cl, so probability ∝ 2(0.755)(0.245) = 0.370. Approximately 6/9 × 90% ≈ 60%." },
+        { "mz": 74, "relativeAbundance": 10, "ionFormula": "³⁷Cl³⁷Cl⁺•", "ionType": "mplus2", "label": "M+4 (³⁷Cl₂)", "fragmentLabel": "Molecular ion ³⁷Cl-³⁷Cl (m/z 74)", "explanation": "M+4 peak: both atoms are ³⁷Cl. Probability ∝ (0.245)² = 0.060. Smallest molecular ion peak at m/z = 74. This three-peak 9:6:1 pattern is the diagnostic fingerprint of Cl₂." }
+      ]
+    },
+    {
+      "id": "butane",
+      "name": "Butane",
+      "formula": "C₄H₁₀",
+      "molecularFormula": "C4H10",
+      "molecularMass": 58,
+      "series": "Alkanes",
+      "iupacName": "Butane",
+      "description": "Butane is a straight-chain alkane. Its spectrum shows systematic fragmentation with the loss of successive CH₂ groups (Δm/z = 14). The base peak at m/z 43 corresponds to the C₃H₇⁺ ion. Notable peaks at m/z 29 (C₂H₅⁺) and 15 (CH₃⁺) confirm the carbon chain.",
+      "keyFeatures": ["Typical alkane fragmentation", "Δm/z = 14 pattern (CH₂ groups)", "Base peak = C₃H₇⁺ at m/z 43", "Molecular ion at m/z 58 (moderate intensity)", "Compare with isomer 2-methylpropane"],
+      "peaks": [
+        { "mz": 58, "relativeAbundance": 15, "ionFormula": "[C₄H₁₀]⁺•", "ionType": "molecular", "label": "M⁺ (58)", "fragmentLabel": "Butane molecular ion [C₄H₁₀]⁺•", "explanation": "Molecular ion. Loss of one electron from butane. Relative atomic mass = 4(12) + 10(1) = 58. Molecular ions of alkanes are generally weak due to easy fragmentation." },
+        { "mz": 57, "relativeAbundance": 4, "ionFormula": "[C₄H₉]⁺", "ionType": "fragment", "label": "M−1", "fragmentLabel": "C₄H₉⁺ (M−1)", "explanation": "Loss of a hydrogen atom from the molecular ion (M−1). Weak peak. C₄H₉⁺ = butyl cation." },
+        { "mz": 43, "relativeAbundance": 100, "ionFormula": "[C₃H₇]⁺", "ionType": "base", "label": "C₃H₇⁺ (base)", "fragmentLabel": "Propyl cation C₃H₇⁺ (base peak, m/z 43)", "explanation": "BASE PEAK. Formed by loss of a CH₃ radical (mass 15) from the molecular ion: [C₄H₁₀]⁺• → C₃H₇⁺ + CH₃•. The n-propyl cation (C₃H₇⁺) is relatively stable. 4(12)+7(1) = 55 — wait, 3(12)+7(1) = 43 ✓." },
+        { "mz": 42, "relativeAbundance": 13, "ionFormula": "[C₃H₆]⁺•", "ionType": "fragment", "label": "C₃H₆⁺•", "fragmentLabel": "Propene radical cation [C₃H₆]⁺• (m/z 42)", "explanation": "Loss of H• from the C₃H₇⁺ ion or rearrangement product. m/z = 3(12)+6(1) = 42." },
+        { "mz": 41, "relativeAbundance": 27, "ionFormula": "[C₃H₅]⁺", "ionType": "fragment", "label": "C₃H₅⁺", "fragmentLabel": "Allyl/propyl cation C₃H₅⁺ (m/z 41)", "explanation": "Formed by further fragmentation. The allyl cation C₃H₅⁺ is stabilized by resonance." },
+        { "mz": 29, "relativeAbundance": 84, "ionFormula": "[C₂H₅]⁺", "ionType": "fragment", "label": "C₂H₅⁺", "fragmentLabel": "Ethyl cation C₂H₅⁺ (m/z 29)", "explanation": "Ethyl cation formed by loss of a C₂H₅ radical from the molecular ion, or fragmentation of the C₃H₇⁺ ion. m/z = 2(12)+5(1) = 29. Note the pattern: m/z 43 (−14) → m/z 29." },
+        { "mz": 28, "relativeAbundance": 28, "ionFormula": "[C₂H₄]⁺•", "ionType": "fragment", "label": "C₂H₄⁺•", "fragmentLabel": "Ethene radical cation [C₂H₄]⁺• (m/z 28)", "explanation": "Formed by loss of H from C₂H₅⁺ or rearrangement. Could also be CO⁺ in oxygenated compounds." },
+        { "mz": 27, "relativeAbundance": 29, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Further fragmentation product. m/z = 2(12)+3(1) = 27." },
+        { "mz": 15, "relativeAbundance": 16, "ionFormula": "[CH₃]⁺", "ionType": "fragment", "label": "CH₃⁺", "fragmentLabel": "Methyl cation CH₃⁺ (m/z 15)", "explanation": "Methyl cation formed by extensive fragmentation. m/z = 12+3(1) = 15. Presence confirms a methyl group in the molecule." }
+      ]
+    },
+    {
+      "id": "pentane",
+      "name": "Pentane",
+      "formula": "C₅H₁₂",
+      "molecularFormula": "C5H12",
+      "molecularMass": 72,
+      "series": "Alkanes",
+      "iupacName": "Pentane",
+      "description": "Pentane (n-pentane) shows the classic unbranched alkane fragmentation: loss of CH₃ (M−15), C₂H₅ (M−29), C₃H₇ (M−43) produces peaks at m/z 57, 43, 29. The base peak is at m/z 43 (C₃H₇⁺). Compare with its branched isomer 2-methylbutane.",
+      "keyFeatures": ["Classic straight-chain alkane pattern", "Base peak C₃H₇⁺ at m/z 43", "Peaks at m/z 43, 57, 29, 72 (M⁺)", "M+1 peak ≈ 5.5% of M⁺ (5 carbons × 1.1%)"],
+      "peaks": [
+        { "mz": 72, "relativeAbundance": 22, "ionFormula": "[C₅H₁₂]⁺•", "ionType": "molecular", "label": "M⁺ (72)", "fragmentLabel": "Pentane molecular ion [C₅H₁₂]⁺•", "explanation": "Molecular ion of pentane. m/z = 5(12)+12(1) = 72. Present but not the base peak — alkane molecular ions fragment readily. M+1 peak at m/z 73 should be ~5.5% of M⁺ (5 carbons × 1.1%)." },
+        { "mz": 73, "relativeAbundance": 1.2, "ionFormula": "[¹³CC₄H₁₂]⁺•", "ionType": "mplus1", "label": "M+1", "fragmentLabel": "M+1 peak (¹³C contribution)", "explanation": "M+1 peak due to ¹³C. With 5 carbon atoms, n = 5, so M+1 = 5 × 1.1% = 5.5% of M⁺ abundance (here 22% × 5.5% ≈ 1.2%). Use formula: n = (M+1 abundance / M⁺ abundance) × (100/1.1)." },
+        { "mz": 57, "relativeAbundance": 6, "ionFormula": "[C₄H₉]⁺", "ionType": "fragment", "label": "M−15 (C₄H₉⁺)", "fragmentLabel": "Butyl cation C₄H₉⁺ (m/z 57)", "explanation": "Loss of CH₃ radical from the molecular ion. M − 15 = 72 − 15 = 57. Butyl cation." },
+        { "mz": 43, "relativeAbundance": 100, "ionFormula": "[C₃H₇]⁺", "ionType": "base", "label": "C₃H₇⁺ (base)", "fragmentLabel": "Propyl cation C₃H₇⁺ (base peak, m/z 43)", "explanation": "BASE PEAK. Loss of C₂H₅ radical (mass 29) from the molecular ion, or further fragmentation of C₄H₉⁺. m/z = 43. Most stable among the fragment ions." },
+        { "mz": 42, "relativeAbundance": 26, "ionFormula": "[C₃H₆]⁺•", "ionType": "fragment", "label": "C₃H₆⁺•", "fragmentLabel": "Propene radical cation [C₃H₆]⁺• (m/z 42)", "explanation": "Loss of H• from C₃H₇⁺ or rearrangement. m/z = 42." },
+        { "mz": 41, "relativeAbundance": 37, "ionFormula": "[C₃H₅]⁺", "ionType": "fragment", "label": "C₃H₅⁺", "fragmentLabel": "Allyl cation C₃H₅⁺ (m/z 41)", "explanation": "The resonance-stabilized allyl cation. m/z = 41." },
+        { "mz": 29, "relativeAbundance": 66, "ionFormula": "[C₂H₅]⁺", "ionType": "fragment", "label": "C₂H₅⁺", "fragmentLabel": "Ethyl cation C₂H₅⁺ (m/z 29)", "explanation": "Loss of C₃H₇ radical (mass 43) from the molecular ion. m/z = 29. Strong peak in pentane spectrum." },
+        { "mz": 27, "relativeAbundance": 57, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Vinyl cation from further fragmentation. m/z = 2(12)+3(1) = 27." },
+        { "mz": 15, "relativeAbundance": 12, "ionFormula": "[CH₃]⁺", "ionType": "fragment", "label": "CH₃⁺", "fragmentLabel": "Methyl cation CH₃⁺ (m/z 15)", "explanation": "Methyl cation. Present in all straight-chain alkanes as a minor fragment." }
+      ]
+    },
+    {
+      "id": "2_methylbutane",
+      "name": "2-Methylbutane",
+      "formula": "C₅H₁₂",
+      "molecularFormula": "C5H12",
+      "molecularMass": 72,
+      "series": "Alkanes",
+      "iupacName": "2-Methylbutane (Isopentane)",
+      "description": "2-Methylbutane is a branched isomer of pentane with the same molecular formula (C₅H₁₂) and molecular mass (72). Despite having the same M⁺, the fragmentation pattern differs markedly. The branched structure leads to cleavage at the branch point, producing an unusually strong peak at m/z 57 compared to pentane.",
+      "keyFeatures": ["Isomer of pentane — same M⁺ (72)", "Stronger M−15 peak (m/z 57) due to branching", "Fragmentation favours cleavage at branch point", "Demonstrates isomer distinction by MS", "Secondary carbocation at branch is more stable"],
+      "peaks": [
+        { "mz": 72, "relativeAbundance": 16, "ionFormula": "[C₅H₁₂]⁺•", "ionType": "molecular", "label": "M⁺ (72)", "fragmentLabel": "2-Methylbutane molecular ion [C₅H₁₂]⁺•", "explanation": "Molecular ion. Same m/z = 72 as pentane — these isomers cannot be distinguished by M⁺ alone. Look at the fragmentation pattern instead!" },
+        { "mz": 57, "relativeAbundance": 39, "ionFormula": "[C₄H₉]⁺", "ionType": "fragment", "label": "M−15 (C₄H₉⁺)", "fragmentLabel": "Butyl cation C₄H₉⁺ (m/z 57) — stronger than in pentane!", "explanation": "Loss of CH₃ radical from the branch point. In 2-methylbutane, cleavage at the branch point gives a secondary carbocation (2-butyl or t-butyl type), which is more stable than in n-pentane. Hence m/z 57 is MUCH STRONGER here (~39%) than in pentane (~6%). This is the key difference between the two isomers." },
+        { "mz": 43, "relativeAbundance": 100, "ionFormula": "[C₃H₇]⁺", "ionType": "base", "label": "C₃H₇⁺ (base)", "fragmentLabel": "Propyl/isopropyl cation C₃H₇⁺ (base peak, m/z 43)", "explanation": "BASE PEAK. Same m/z as pentane's base peak, but the ion here can be the isopropyl cation [(CH₃)₂CH]⁺, which is a secondary carbocation — more stable than the primary propyl cation in pentane." },
+        { "mz": 42, "relativeAbundance": 22, "ionFormula": "[C₃H₆]⁺•", "ionType": "fragment", "label": "C₃H₆⁺•", "fragmentLabel": "Propene radical cation C₃H₆⁺• (m/z 42)", "explanation": "Loss of H• from C₃H₇⁺ or rearrangement product. m/z = 42." },
+        { "mz": 41, "relativeAbundance": 18, "ionFormula": "[C₃H₅]⁺", "ionType": "fragment", "label": "C₃H₅⁺", "fragmentLabel": "Allyl cation C₃H₅⁺ (m/z 41)", "explanation": "Allyl cation fragment. m/z = 41. Less intense than in n-pentane." },
+        { "mz": 29, "relativeAbundance": 53, "ionFormula": "[C₂H₅]⁺", "ionType": "fragment", "label": "C₂H₅⁺", "fragmentLabel": "Ethyl cation C₂H₅⁺ (m/z 29)", "explanation": "Ethyl cation. m/z = 29. Still significant but different relative intensity to n-pentane." },
+        { "mz": 27, "relativeAbundance": 36, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Further fragmentation product. m/z = 27." },
+        { "mz": 15, "relativeAbundance": 20, "ionFormula": "[CH₃]⁺", "ionType": "fragment", "label": "CH₃⁺", "fragmentLabel": "Methyl cation CH₃⁺ (m/z 15)", "explanation": "Methyl cation. Slightly stronger than in n-pentane due to the extra methyl branch in 2-methylbutane." }
+      ]
+    },
+    {
+      "id": "propene",
+      "name": "Propene",
+      "formula": "C₃H₆",
+      "molecularFormula": "C3H6",
+      "molecularMass": 42,
+      "series": "Alkenes",
+      "iupacName": "Prop-1-ene (Propylene)",
+      "description": "Propene is the simplest alkene with a visible molecular ion. The π electrons are more easily removed than σ electrons, so the molecular ion is relatively abundant. Loss of H gives the allyl cation (m/z 41), stabilized by resonance across the double bond.",
+      "keyFeatures": ["π electrons easier to ionize → strong molecular ion", "Allyl cation (m/z 41) is resonance-stabilized", "Strong M⁺ peak compared to alkanes", "Fragmentation at C=C leads to allylic ions"],
+      "peaks": [
+        { "mz": 42, "relativeAbundance": 63, "ionFormula": "[C₃H₆]⁺•", "ionType": "molecular", "label": "M⁺ (42)", "fragmentLabel": "Propene molecular ion [C₃H₆]⁺•", "explanation": "Strong molecular ion. The π electrons of the double bond are more easily removed, giving a relatively abundant M⁺. m/z = 3(12)+6(1) = 42. This is more stable than an alkane radical cation." },
+        { "mz": 41, "relativeAbundance": 100, "ionFormula": "[C₃H₅]⁺", "ionType": "base", "label": "C₃H₅⁺ (base)", "fragmentLabel": "Allyl cation [CH₂=CH-CH₂]⁺ (base peak, m/z 41)", "explanation": "BASE PEAK. Loss of H• from the molecular ion gives the resonance-stabilized allyl cation [CH₂=CH−CH₂ ↔ •CH₂−CH=CH₂]⁺. The delocalization of the positive charge makes this the most stable fragment, hence the base peak." },
+        { "mz": 40, "relativeAbundance": 27, "ionFormula": "[C₃H₄]⁺•", "ionType": "fragment", "label": "C₃H₄⁺•", "fragmentLabel": "Propyne/allene radical cation [C₃H₄]⁺• (m/z 40)", "explanation": "Further loss of H from the allyl cation. Could be propyne (CH≡C−CH₃)⁺• or allene (CH₂=C=CH₂)⁺•. m/z = 40." },
+        { "mz": 39, "relativeAbundance": 83, "ionFormula": "[C₃H₃]⁺", "ionType": "fragment", "label": "C₃H₃⁺", "fragmentLabel": "Cyclopropenyl cation [C₃H₃]⁺ (m/z 39)", "explanation": "The cyclopropenyl cation is the simplest aromatic cation (2 π electrons). Very stable and gives a prominent peak at m/z = 39. This peak is characteristic of C₃ hydrocarbons." },
+        { "mz": 27, "relativeAbundance": 31, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Vinyl cation from C−C bond cleavage. m/z = 27." }
+      ]
+    },
+    {
+      "id": "but1ene",
+      "name": "But-1-ene",
+      "formula": "C₄H₈",
+      "molecularFormula": "C4H8",
+      "molecularMass": 56,
+      "series": "Alkenes",
+      "iupacName": "But-1-ene (1-Butylene)",
+      "description": "But-1-ene has the same molecular formula and mass as cyclobutane (C₄H₈, M=56), illustrating how MS alone sometimes cannot distinguish structural isomers. The dominant fragmentation gives the allyl cation (m/z 41) by β-cleavage adjacent to the double bond.",
+      "keyFeatures": ["M⁺ same as cyclobutane (56)", "Allylic β-cleavage gives m/z 41", "Base peak at m/z 41 (allyl cation)", "π electrons stabilize molecular ion"],
+      "peaks": [
+        { "mz": 56, "relativeAbundance": 28, "ionFormula": "[C₄H₈]⁺•", "ionType": "molecular", "label": "M⁺ (56)", "fragmentLabel": "But-1-ene molecular ion [C₄H₈]⁺•", "explanation": "Molecular ion at m/z = 4(12)+8(1) = 56. The π electrons of the C=C bond are ionized preferentially. Fairly abundant M⁺ compared to saturated alkanes of similar mass." },
+        { "mz": 41, "relativeAbundance": 100, "ionFormula": "[C₃H₅]⁺", "ionType": "base", "label": "C₃H₅⁺ (base)", "fragmentLabel": "Allyl cation C₃H₅⁺ (base peak, m/z 41)", "explanation": "BASE PEAK. β-cleavage: the C−C bond β to the double bond cleaves, releasing CH₃• and generating the allyl cation (CH₂=CH−CH₂⁺). The allyl cation is resonance-stabilized. m/z = 3(12)+5(1) = 41." },
+        { "mz": 39, "relativeAbundance": 55, "ionFormula": "[C₃H₃]⁺", "ionType": "fragment", "label": "C₃H₃⁺", "fragmentLabel": "Cyclopropenyl cation [C₃H₃]⁺ (m/z 39)", "explanation": "Cyclopropenyl cation from further loss of H₂ from the allyl cation. m/z = 39. Characteristic of C₃ fragments." },
+        { "mz": 29, "relativeAbundance": 17, "ionFormula": "[C₂H₅]⁺", "ionType": "fragment", "label": "C₂H₅⁺", "fragmentLabel": "Ethyl cation C₂H₅⁺ (m/z 29)", "explanation": "Ethyl cation from C−C cleavage in the chain. m/z = 29." },
+        { "mz": 27, "relativeAbundance": 63, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Vinyl cation. A prominent fragment in alkene spectra. m/z = 27." }
+      ]
+    },
+    {
+      "id": "benzene",
+      "name": "Benzene",
+      "formula": "C₆H₆",
+      "molecularFormula": "C6H6",
+      "molecularMass": 78,
+      "series": "Aromatic Compounds",
+      "iupacName": "Benzene",
+      "description": "Benzene has an exceptionally stable molecular ion due to the delocalized aromatic π system. The molecular ion IS the base peak. There is almost no fragmentation, making it the simplest aromatic spectrum to recognize. The M+1 peak at m/z 79 is ~6.6% of M⁺ (6 carbons × 1.1%).",
+      "keyFeatures": ["Molecular ion = base peak (very stable)", "Aromatic delocalization stabilizes M⁺", "Very little fragmentation", "M+1 at m/z 79 ≈ 6.6% (confirms 6 carbons)", "Peaks at m/z 51, 50 from ring fragmentation"],
+      "peaks": [
+        { "mz": 78, "relativeAbundance": 100, "ionFormula": "[C₆H₆]⁺•", "ionType": "base", "label": "M⁺ (78) = base", "fragmentLabel": "Benzene molecular ion [C₆H₆]⁺• (base peak!)", "explanation": "BASE PEAK = MOLECULAR ION. The aromatic π system delocalizes the positive charge over the entire ring, making the molecular ion exceptionally stable. Very little fragmentation occurs. This is a diagnostic feature of benzene. m/z = 6(12)+6(1) = 78." },
+        { "mz": 79, "relativeAbundance": 6.6, "ionFormula": "[¹³CC₅H₆]⁺•", "ionType": "mplus1", "label": "M+1 (79)", "fragmentLabel": "M+1 peak due to ¹³C (m/z 79)", "explanation": "M+1 PEAK. With 6 carbon atoms: M+1% = 6 × 1.1% = 6.6% of M⁺ abundance. From n = (M+1/M⁺) × (100/1.1) = (6.6/100) × (100/1.1) ≈ 6 carbon atoms. This confirms the molecular formula." },
+        { "mz": 77, "relativeAbundance": 22, "ionFormula": "[C₆H₅]⁺", "ionType": "fragment", "label": "C₆H₅⁺", "fragmentLabel": "Phenyl cation C₆H₅⁺ (m/z 77)", "explanation": "Loss of H• from the molecular ion gives the phenyl cation [C₆H₅]⁺. m/z = 6(12)+5(1) = 77. Significant peak in all benzene-ring compounds." },
+        { "mz": 52, "relativeAbundance": 11, "ionFormula": "[C₄H₄]⁺•", "ionType": "fragment", "label": "C₄H₄⁺•", "fragmentLabel": "Vinylacetylene cation [C₄H₄]⁺• (m/z 52)", "explanation": "Further ring fragmentation. m/z = 4(12)+4(1) = 52. Arises from opening and rearrangement of the ring." },
+        { "mz": 51, "relativeAbundance": 26, "ionFormula": "[C₄H₃]⁺", "ionType": "fragment", "label": "C₄H₃⁺", "fragmentLabel": "C₄H₃⁺ fragment (m/z 51)", "explanation": "Characteristic aromatic fragment at m/z = 51. Formed by ring contraction and loss of C₂H₂ units. m/z = 4(12)+3(1) = 51." },
+        { "mz": 50, "relativeAbundance": 34, "ionFormula": "[C₄H₂]⁺•", "ionType": "fragment", "label": "C₄H₂⁺•", "fragmentLabel": "C₄H₂⁺• fragment (m/z 50)", "explanation": "Another aromatic ring fragmentation product. m/z = 4(12)+2(1) = 50. The pattern of peaks at 50, 51, 52 is characteristic of the benzene ring system." }
+      ]
+    },
+    {
+      "id": "methylbenzene",
+      "name": "Methylbenzene (Toluene)",
+      "formula": "C₇H₈",
+      "molecularFormula": "C7H8",
+      "molecularMass": 92,
+      "series": "Aromatic Compounds",
+      "iupacName": "Methylbenzene (Toluene)",
+      "description": "Methylbenzene shows the characteristic loss of a CH₃ group followed by cyclization to the highly stable tropylium cation [C₇H₇]⁺ at m/z 91, which IS the base peak. The tropylium cation is a 6π aromatic cation (cyclic, planar, 4n+2 electrons). This pattern — large M⁺ and large m/z 91 — is the fingerprint of all alkylbenzenes.",
+      "keyFeatures": ["Tropylium cation [C₇H₇]⁺ at m/z 91 = base peak", "Tropylium is aromatic (6π electrons)", "M⁺ at m/z 92 (strong)", "Loss of H from tropylium gives m/z 90", "Diagnostic for alkylbenzenes"],
+      "peaks": [
+        { "mz": 92, "relativeAbundance": 36, "ionFormula": "[C₇H₈]⁺•", "ionType": "molecular", "label": "M⁺ (92)", "fragmentLabel": "Methylbenzene molecular ion [C₇H₈]⁺•", "explanation": "Strong molecular ion at m/z = 7(12)+8(1) = 92. The aromatic ring stabilizes the radical cation. Moderately strong M⁺ compared to aliphatic compounds." },
+        { "mz": 91, "relativeAbundance": 100, "ionFormula": "[C₇H₇]⁺", "ionType": "base", "label": "Tropylium (base, 91)", "fragmentLabel": "Tropylium cation [C₇H₇]⁺ (base peak, m/z 91)", "explanation": "BASE PEAK. Loss of H• from M⁺ gives the tropylium cation [C₇H₇]⁺. This is a cyclic, planar, 6π-electron aromatic cation (cycloheptatrienyl). Its exceptional stability (aromaticity!) makes it the dominant fragment. m/z = 7(12)+7(1) = 91. This peak is the SIGNATURE of alkylbenzenes." },
+        { "mz": 65, "relativeAbundance": 16, "ionFormula": "[C₅H₅]⁺", "ionType": "fragment", "label": "C₅H₅⁺", "fragmentLabel": "Cyclopentadienyl cation C₅H₅⁺ (m/z 65)", "explanation": "Loss of C₂H₂ (acetylene) from the tropylium cation: [C₇H₇]⁺ → [C₅H₅]⁺ + C₂H₂. The cyclopentadienyl cation is also aromatic-like. m/z = 5(12)+5(1) = 65." },
+        { "mz": 63, "relativeAbundance": 9, "ionFormula": "[C₅H₃]⁺", "ionType": "fragment", "label": "C₅H₃⁺", "fragmentLabel": "C₅H₃⁺ (m/z 63)", "explanation": "Further fragmentation from C₅H₅⁺ by loss of H₂. m/z = 63." },
+        { "mz": 51, "relativeAbundance": 11, "ionFormula": "[C₄H₃]⁺", "ionType": "fragment", "label": "C₄H₃⁺", "fragmentLabel": "C₄H₃⁺ fragment (m/z 51)", "explanation": "Characteristic benzene-ring fragment at m/z = 51. Common to all aromatic compounds." },
+        { "mz": 39, "relativeAbundance": 15, "ionFormula": "[C₃H₃]⁺", "ionType": "fragment", "label": "C₃H₃⁺", "fragmentLabel": "Cyclopropenyl cation [C₃H₃]⁺ (m/z 39)", "explanation": "Cyclopropenyl cation, the simplest aromatic cation, formed by further ring fragmentation. m/z = 39." }
+      ]
+    },
+    {
+      "id": "ethanol",
+      "name": "Ethanol",
+      "formula": "C₂H₅OH",
+      "molecularFormula": "C2H6O",
+      "molecularMass": 46,
+      "series": "Alcohols",
+      "iupacName": "Ethanol",
+      "description": "Ethanol illustrates typical alcohol fragmentation. The molecular ion at m/z 46 is weak (alcohols fragment readily). The base peak at m/z 31 is the hydroxymethyl cation [CH₂OH]⁺ — a characteristic of primary alcohols. The peak at m/z 45 (M−1) indicates loss of H, while m/z 29 could be [CHO]⁺ or [C₂H₅]⁺.",
+      "keyFeatures": ["Weak M⁺ (m/z 46) — alcohols fragment easily", "Base peak [CH₂OH]⁺ at m/z 31 — diagnostic for primary alcohols", "M−1 peak at m/z 45 (loss of H)", "m/z 29: C₂H₅⁺ or CHO⁺"],
+      "peaks": [
+        { "mz": 46, "relativeAbundance": 7, "ionFormula": "[C₂H₅OH]⁺•", "ionType": "molecular", "label": "M⁺ (46)", "fragmentLabel": "Ethanol molecular ion [C₂H₅OH]⁺•", "explanation": "Molecular ion. m/z = 2(12)+6(1)+16 = 46. Weak peak — alcohols have easily broken C−O and C−C bonds, leading to extensive fragmentation." },
+        { "mz": 45, "relativeAbundance": 26, "ionFormula": "[C₂H₅O]⁺", "ionType": "fragment", "label": "M−1 (45)", "fragmentLabel": "[C₂H₅O]⁺ (M−1, m/z 45)", "explanation": "Loss of H• from the molecular ion. [C₂H₅OH]⁺• → [CH₃CHOH]⁺ + H•. The resulting oxocarbenium ion [CH₃CHOH]⁺ is stabilized by the lone pair on oxygen (α-cleavage). m/z = 45." },
+        { "mz": 31, "relativeAbundance": 100, "ionFormula": "[CH₂OH]⁺", "ionType": "base", "label": "CH₂OH⁺ (base, 31)", "fragmentLabel": "Hydroxymethyl cation [CH₂OH]⁺ (base peak, m/z 31)", "explanation": "BASE PEAK. α-CLEAVAGE: the C−C bond adjacent (α) to the OH-bearing carbon breaks, giving [CH₂=OH]⁺. This is the hydroxymethyl (or methoxymethyl) cation. m/z = 12+2(1)+16+1 = 31. This peak at m/z = 31 is the DIAGNOSTIC PEAK for primary alcohols (R-CH₂OH → [CH₂OH]⁺)." },
+        { "mz": 29, "relativeAbundance": 53, "ionFormula": "[CHO]⁺ or [C₂H₅]⁺", "ionType": "fragment", "label": "m/z 29", "fragmentLabel": "CHO⁺ or C₂H₅⁺ (m/z 29)", "explanation": "Two possible ions overlap at m/z 29: the formyl cation [CHO]⁺ (from oxidation-type rearrangement) and the ethyl cation [C₂H₅]⁺ (from C−OH bond cleavage). Both have m/z = 29. High-resolution MS would separate them." },
+        { "mz": 27, "relativeAbundance": 26, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Vinyl cation formed by dehydration and further fragmentation. m/z = 27." }
+      ]
+    },
+    {
+      "id": "propan1ol",
+      "name": "Propan-1-ol",
+      "formula": "C₃H₇OH",
+      "molecularFormula": "C3H8O",
+      "molecularMass": 60,
+      "series": "Alcohols",
+      "iupacName": "Propan-1-ol (1-Propanol)",
+      "description": "Propan-1-ol, a primary alcohol, shows the characteristic primary alcohol base peak at m/z 31 ([CH₂OH]⁺). The M⁺ at m/z 60 is very weak — common for alcohols. The peak at m/z 59 (M−1) shows loss of H. Compare with its isomer propan-2-ol to understand how MS distinguishes structural isomers.",
+      "keyFeatures": ["Primary alcohol: base peak m/z 31 ([CH₂OH]⁺)", "Very weak M⁺ at m/z 60", "Compare with propan-2-ol (same M⁺, different fragmentation)", "Dehydration peak at m/z 42 (loss of H₂O, 18)"],
+      "peaks": [
+        { "mz": 60, "relativeAbundance": 4, "ionFormula": "[C₃H₇OH]⁺•", "ionType": "molecular", "label": "M⁺ (60)", "fragmentLabel": "Propan-1-ol molecular ion [C₃H₇OH]⁺•", "explanation": "Very weak molecular ion at m/z = 3(12)+8(1)+16 = 60. Alcohols have notoriously weak M⁺ peaks due to rapid α-cleavage. SAME M⁺ as propan-2-ol — look at the fragmentation to distinguish them!" },
+        { "mz": 59, "relativeAbundance": 5, "ionFormula": "[C₃H₇O]⁺", "ionType": "fragment", "label": "M−1 (59)", "fragmentLabel": "[C₃H₇O]⁺ (M−1, m/z 59)", "explanation": "Loss of H from the molecular ion. m/z = 59." },
+        { "mz": 42, "relativeAbundance": 15, "ionFormula": "[C₃H₆]⁺•", "ionType": "fragment", "label": "M−18 (42)", "fragmentLabel": "Propene⁺• [C₃H₆]⁺• (M−H₂O, m/z 42)", "explanation": "Loss of water (H₂O, mass 18) from M⁺: 60 − 18 = 42. Dehydration is very common in alcohol spectra. The resulting propene radical cation [CH₃CH=CH₂]⁺• appears at m/z = 42." },
+        { "mz": 41, "relativeAbundance": 22, "ionFormula": "[C₃H₅]⁺", "ionType": "fragment", "label": "C₃H₅⁺", "fragmentLabel": "Allyl cation C₃H₅⁺ (m/z 41)", "explanation": "Loss of H from [C₃H₆]⁺• to give the allyl cation. m/z = 41." },
+        { "mz": 31, "relativeAbundance": 100, "ionFormula": "[CH₂OH]⁺", "ionType": "base", "label": "CH₂OH⁺ (base, 31)", "fragmentLabel": "Hydroxymethyl cation [CH₂OH]⁺ (base peak, m/z 31)", "explanation": "BASE PEAK. α-cleavage at the C-1 to C-2 bond: [C₃H₇OH]⁺• → [CH₂=OH]⁺ + C₂H₅•. The hydroxymethyl cation at m/z = 31 is the FINGERPRINT OF PRIMARY ALCOHOLS. Same as in ethanol. Propan-2-ol (a secondary alcohol) does NOT show this as the base peak." },
+        { "mz": 29, "relativeAbundance": 30, "ionFormula": "[C₂H₅]⁺", "ionType": "fragment", "label": "C₂H₅⁺", "fragmentLabel": "Ethyl cation C₂H₅⁺ (m/z 29)", "explanation": "Ethyl cation formed by α-cleavage on the other side: [C₃H₇OH]⁺• → [C₂H₅]⁺ + •CH₂OH. m/z = 29." },
+        { "mz": 27, "relativeAbundance": 39, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Further fragmentation. m/z = 27." }
+      ]
+    },
+    {
+      "id": "propan2ol",
+      "name": "Propan-2-ol",
+      "formula": "(CH₃)₂CHOH",
+      "molecularFormula": "C3H8O",
+      "molecularMass": 60,
+      "series": "Alcohols",
+      "iupacName": "Propan-2-ol (2-Propanol, Isopropanol)",
+      "description": "Propan-2-ol is a SECONDARY alcohol. Although it has the same molecular formula (C₃H₈O) and M⁺ (60) as propan-1-ol, the fragmentation is completely different. The base peak at m/z 45 (loss of CH₃) is characteristic of secondary alcohols (α-cleavage gives a larger, more substituted oxocarbenium ion). The m/z 31 peak that dominates propan-1-ol is ABSENT here.",
+      "keyFeatures": ["Same M⁺ (60) as propan-1-ol", "Base peak m/z 45 (loss of CH₃) — secondary alcohol fingerprint", "NO m/z 31 peak (no [CH₂OH]⁺)", "Key MS distinguishes these isomers!", "α-cleavage favours loss of largest alkyl group"],
+      "peaks": [
+        { "mz": 60, "relativeAbundance": 3, "ionFormula": "[C₃H₈O]⁺•", "ionType": "molecular", "label": "M⁺ (60)", "fragmentLabel": "Propan-2-ol molecular ion [C₃H₈O]⁺•", "explanation": "Very weak molecular ion, m/z = 60 — same as propan-1-ol. Cannot distinguish the isomers from M⁺ alone! The fragmentation patterns are the key diagnostic." },
+        { "mz": 45, "relativeAbundance": 100, "ionFormula": "[(CH₃)CHOH]⁺", "ionType": "base", "label": "[CH₃CHOH]⁺ (base, 45)", "fragmentLabel": "1-Hydroxyethyl cation [CH₃CHOH]⁺ (base peak, m/z 45)", "explanation": "BASE PEAK. α-CLEAVAGE: loss of CH₃• from the molecular ion — [CH₃)₂CHOH]⁺• → [CH₃CHOH]⁺ + CH₃•. The α-cleavage rule: loss of the LARGEST group adjacent to the OH carbon is favoured (gives most stable carbocation). m/z = 12+4(1)+12+1+16+1 = 45? Actually [CH₃CHOH]⁺ = CH₃ + CH + OH = 12+3+12+1+16+1 = 45. This SECONDARY alcohol loses CH₃ not H. Compare to the PRIMARY alcohol (propan-1-ol) where base peak was m/z 31." },
+        { "mz": 43, "relativeAbundance": 45, "ionFormula": "[C₃H₇]⁺ or [CH₃CO]⁺", "ionType": "fragment", "label": "m/z 43", "fragmentLabel": "C₃H₇⁺ or CH₃CO⁺ (m/z 43)", "explanation": "m/z 43 could be the isopropyl cation (CH₃)₂CH⁺ from loss of OH•, or the acetyl cation CH₃CO⁺ from dehydrogenation. m/z = 43." },
+        { "mz": 41, "relativeAbundance": 17, "ionFormula": "[C₃H₅]⁺", "ionType": "fragment", "label": "C₃H₅⁺", "fragmentLabel": "Allyl cation C₃H₅⁺ (m/z 41)", "explanation": "Allyl/propenyl cation from further fragmentation. m/z = 41." },
+        { "mz": 27, "relativeAbundance": 18, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Further fragmentation to vinyl cation. m/z = 27. Note: NO m/z 31 peak — this conclusively identifies this compound as a SECONDARY alcohol, NOT primary." }
+      ]
+    },
+    {
+      "id": "ethanal",
+      "name": "Ethanal (Acetaldehyde)",
+      "formula": "CH₃CHO",
+      "molecularFormula": "C2H4O",
+      "molecularMass": 44,
+      "series": "Aldehydes",
+      "iupacName": "Ethanal",
+      "description": "Ethanal is the simplest aldehyde with a carbon chain. Its spectrum has a relatively strong molecular ion at m/z 44. The base peak at m/z 29 ([CHO]⁺, the formyl cation) and the peak at m/z 43 ([CH₃CO]⁺, acetyl cation) from the two possible α-cleavages. A formyl (CHO⁺) peak at m/z 29 is characteristic of aldehydes.",
+      "keyFeatures": ["Aldehyde: base peak [CHO]⁺ at m/z 29", "α-cleavage on both sides of C=O", "m/z 43 = acetyl cation CH₃CO⁺", "m/z 15 = CH₃⁺ confirming methyl group"],
+      "peaks": [
+        { "mz": 44, "relativeAbundance": 55, "ionFormula": "[CH₃CHO]⁺•", "ionType": "molecular", "label": "M⁺ (44)", "fragmentLabel": "Ethanal molecular ion [CH₃CHO]⁺•", "explanation": "Molecular ion at m/z = 2(12)+4(1)+16 = 44. Relatively strong for an aldehyde. The C=O group lone pairs are easily ionized." },
+        { "mz": 43, "relativeAbundance": 38, "ionFormula": "[CH₃CO]⁺", "ionType": "fragment", "label": "CH₃CO⁺ (43)", "fragmentLabel": "Acetyl cation CH₃CO⁺ (m/z 43)", "explanation": "α-CLEAVAGE: loss of H• from the carbonyl side: [CH₃CHO]⁺• → [CH₃CO]⁺ + H•. The acetyl cation (acylium ion) is stabilized by resonance [CH₃C≡O]⁺. m/z = 12+3(1)+12+16 = 43." },
+        { "mz": 29, "relativeAbundance": 100, "ionFormula": "[CHO]⁺", "ionType": "base", "label": "CHO⁺ (base, 29)", "fragmentLabel": "Formyl cation [CHO]⁺ = acylium ion (base peak, m/z 29)", "explanation": "BASE PEAK. α-CLEAVAGE: loss of CH₃• from the molecular ion: [CH₃CHO]⁺• → [CHO]⁺ + CH₃•. The formyl cation [H−C≡O]⁺ is stabilized by the positive charge on carbon. m/z = 12+1+16 = 29. A CHO⁺ peak near m/z 29 is DIAGNOSTIC for aldehydes. Note: in ethanol, m/z 29 could also be C₂H₅⁺." },
+        { "mz": 28, "relativeAbundance": 13, "ionFormula": "[CO]⁺•", "ionType": "fragment", "label": "CO⁺• (28)", "fragmentLabel": "Carbon monoxide cation [CO]⁺• (m/z 28)", "explanation": "Loss of H from the formyl cation [CHO]⁺ → [CO]⁺ + H•. The CO⁺ radical cation at m/z = 12+16 = 28. This peak is seen in many carbonyl compounds." },
+        { "mz": 15, "relativeAbundance": 12, "ionFormula": "[CH₃]⁺", "ionType": "fragment", "label": "CH₃⁺ (15)", "fragmentLabel": "Methyl cation CH₃⁺ (m/z 15)", "explanation": "Methyl cation formed by α-cleavage or further fragmentation. m/z = 12+3(1) = 15. Confirms the presence of a CH₃ group." }
+      ]
+    },
+    {
+      "id": "propanal",
+      "name": "Propanal",
+      "formula": "C₂H₅CHO",
+      "molecularFormula": "C3H6O",
+      "molecularMass": 58,
+      "series": "Aldehydes",
+      "iupacName": "Propanal (Propionaldehyde)",
+      "description": "Propanal shows the classic aldehyde fragmentation: α-cleavage next to the C=O group. The formyl cation [CHO]⁺ at m/z 29 is the base peak. Note that m/z 58 is also the molecular mass of propanone — these isomers can be distinguished because propanal shows m/z 29 (CHO⁺) prominently, while propanone does not.",
+      "keyFeatures": ["Same M⁺ (58) as propanone (isomer comparison!)", "Base peak m/z 29 = [CHO]⁺ — diagnostic for aldehyde", "Propanone has base peak at m/z 43, propanal at m/z 29", "m/z 28 = CO⁺ loss from formyl cation", "MS clearly distinguishes these functional isomers"],
+      "peaks": [
+        { "mz": 58, "relativeAbundance": 23, "ionFormula": "[C₂H₅CHO]⁺•", "ionType": "molecular", "label": "M⁺ (58)", "fragmentLabel": "Propanal molecular ion [C₂H₅CHO]⁺•", "explanation": "Molecular ion at m/z = 3(12)+6(1)+16 = 58. SAME as propanone! Compare the fragment patterns to identify which is which. The base peaks are very different." },
+        { "mz": 57, "relativeAbundance": 18, "ionFormula": "[C₂H₅CO]⁺", "ionType": "fragment", "label": "M−1 (57)", "fragmentLabel": "Propanoyl cation [C₂H₅CO]⁺ (m/z 57)", "explanation": "α-cleavage releasing H•: [C₂H₅CHO]⁺• → [C₂H₅CO]⁺ + H•. The propanoyl (acylium) cation. m/z = 57." },
+        { "mz": 29, "relativeAbundance": 100, "ionFormula": "[CHO]⁺", "ionType": "base", "label": "CHO⁺ (base, 29)", "fragmentLabel": "Formyl cation [CHO]⁺ (base peak, m/z 29)", "explanation": "BASE PEAK. α-CLEAVAGE: loss of C₂H₅• (mass 29) from the molecular ion: [C₂H₅CHO]⁺• → [CHO]⁺ + C₂H₅•. The formyl cation [H−C≡O]⁺ at m/z 29 is the DIAGNOSTIC PEAK for aldehydes. Compare: propanone has NO m/z 29 CHO⁺ peak. This conclusively distinguishes propanal from propanone!" },
+        { "mz": 28, "relativeAbundance": 41, "ionFormula": "[CO]⁺•", "ionType": "fragment", "label": "CO⁺• (28)", "fragmentLabel": "Carbon monoxide cation [CO]⁺• (m/z 28)", "explanation": "Loss of H• from [CHO]⁺. CO⁺• at m/z = 28. Characteristic of aldehydes and other carbonyl compounds." },
+        { "mz": 27, "relativeAbundance": 34, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Vinyl cation from further fragmentation of the ethyl group region. m/z = 27." }
+      ]
+    },
+    {
+      "id": "propanone",
+      "name": "Propanone (Acetone)",
+      "formula": "CH₃COCH₃",
+      "molecularFormula": "C3H6O",
+      "molecularMass": 58,
+      "series": "Ketones",
+      "iupacName": "Propan-2-one (Acetone)",
+      "description": "Propanone is the simplest ketone and gives the textbook example of ketone fragmentation. The base peak at m/z 43 is the acetyl (acylium) cation [CH₃CO]⁺, formed by α-cleavage. Since both sides of the carbonyl are identical (both are CH₃ groups), only one type of α-cleavage fragment is seen. The molecular ion at m/z 58 is moderate.",
+      "keyFeatures": ["Classic ketone fragmentation example", "Base peak m/z 43 = [CH₃CO]⁺ (acetyl cation)", "α-cleavage on both sides gives same product (symmetric ketone)", "m/z 15 = CH₃⁺ (the other α-cleavage product)", "Same M⁺ as propanal — compare fragmentation!"],
+      "peaks": [
+        { "mz": 58, "relativeAbundance": 40, "ionFormula": "[CH₃COCH₃]⁺•", "ionType": "molecular", "label": "M⁺ (58)", "fragmentLabel": "Propanone molecular ion [CH₃COCH₃]⁺•", "explanation": "Molecular ion at m/z = 3(12)+6(1)+16 = 58. SAME molecular mass as propanal and butane — but completely different spectra. The m/z 58 peak is moderate for a ketone." },
+        { "mz": 43, "relativeAbundance": 100, "ionFormula": "[CH₃CO]⁺", "ionType": "base", "label": "CH₃CO⁺ (base, 43)", "fragmentLabel": "Acetyl cation [CH₃CO]⁺ — acylium ion (base peak, m/z 43)", "explanation": "BASE PEAK. α-CLEAVAGE: the C−C bond next to the C=O breaks: [CH₃COCH₃]⁺• → [CH₃CO]⁺ + CH₃•. The acetyl (acylium) cation is resonance-stabilized: [CH₃−C≡O]⁺ ↔ [CH₃⁺=C=O]. m/z = 12+3(1)+12+16 = 43. In propanone, both α-cleavages give the SAME product because both R groups are CH₃, so m/z 43 is very intense." },
+        { "mz": 15, "relativeAbundance": 29, "ionFormula": "[CH₃]⁺", "ionType": "fragment", "label": "CH₃⁺ (15)", "fragmentLabel": "Methyl cation CH₃⁺ (m/z 15)", "explanation": "The complementary α-cleavage product: [CH₃COCH₃]⁺• → CH₃• + [CH₃CO]⁺ (which gives m/z 43), or: m/z 43 → m/z 15 + CO. The methyl cation is small but detectable. m/z = 12+3(1) = 15." }
+      ]
+    },
+    {
+      "id": "butanone",
+      "name": "Butanone (MEK)",
+      "formula": "CH₃COC₂H₅",
+      "molecularFormula": "C4H8O",
+      "molecularMass": 72,
+      "series": "Ketones",
+      "iupacName": "Butan-2-one (Methyl Ethyl Ketone, MEK)",
+      "description": "Butanone (butan-2-one) is an asymmetric ketone, so two different α-cleavages are possible: loss of CH₃ gives m/z 57, loss of C₂H₅ gives m/z 43. The base peak at m/z 43 ([CH₃CO]⁺) is favoured over m/z 57 ([C₂H₅CO]⁺) because the methyl group is more easily lost as a radical than the ethyl group (less stable radical).",
+      "keyFeatures": ["Asymmetric ketone: two possible α-cleavages", "Base peak m/z 43 = [CH₃CO]⁺ (favoured)", "m/z 57 = [C₂H₅CO]⁺ (minor, loss of CH₃)", "m/z 29 = [C₂H₅]⁺ or [CHO]⁺"],
+      "peaks": [
+        { "mz": 72, "relativeAbundance": 26, "ionFormula": "[CH₃COC₂H₅]⁺•", "ionType": "molecular", "label": "M⁺ (72)", "fragmentLabel": "Butanone molecular ion [C₄H₈O]⁺•", "explanation": "Molecular ion at m/z = 4(12)+8(1)+16 = 72. Moderate intensity for a ketone." },
+        { "mz": 57, "relativeAbundance": 7, "ionFormula": "[C₂H₅CO]⁺", "ionType": "fragment", "label": "M−15 (57)", "fragmentLabel": "Propanoyl cation [C₂H₅CO]⁺ (m/z 57)", "explanation": "α-CLEAVAGE: loss of CH₃• from the molecular ion: [CH₃COC₂H₅]⁺• → [C₂H₅CO]⁺ + CH₃•. This gives the propanoyl (ethyl acylium) cation at m/z = 57. Less favoured than the other α-cleavage." },
+        { "mz": 43, "relativeAbundance": 100, "ionFormula": "[CH₃CO]⁺", "ionType": "base", "label": "CH₃CO⁺ (base, 43)", "fragmentLabel": "Acetyl cation [CH₃CO]⁺ (base peak, m/z 43)", "explanation": "BASE PEAK. α-CLEAVAGE: loss of C₂H₅• from the molecular ion: [CH₃COC₂H₅]⁺• → [CH₃CO]⁺ + C₂H₅•. This cleavage is favoured because an ethyl radical is more stable than a methyl radical, making the C₂H₅ the preferred leaving group. m/z = 43. Same fragment as propanone base peak!" },
+        { "mz": 29, "relativeAbundance": 25, "ionFormula": "[C₂H₅]⁺", "ionType": "fragment", "label": "C₂H₅⁺ (29)", "fragmentLabel": "Ethyl cation C₂H₅⁺ (m/z 29)", "explanation": "Ethyl cation, the complementary fragment to [CH₃CO]⁺. Formed by C−C bond cleavage on the other side of the carbonyl. m/z = 29." },
+        { "mz": 27, "relativeAbundance": 12, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Further fragmentation of the ethyl cation or other C₂ fragments. m/z = 27." }
+      ]
+    },
+    {
+      "id": "pentan2one",
+      "name": "Pentan-2-one",
+      "formula": "CH₃CO(CH₂)₂CH₃",
+      "molecularFormula": "C5H10O",
+      "molecularMass": 86,
+      "series": "Ketones",
+      "iupacName": "Pentan-2-one (Methyl n-Propyl Ketone)",
+      "description": "Pentan-2-one shows α-cleavage (base peak m/z 43, [CH₃CO]⁺) and also the McLafferty Rearrangement, a unique γ-hydrogen migration that gives a peak at m/z 58 (loss of 28, loss of CH₂=CH₂). This rearrangement requires a γ-hydrogen and a carbonyl — it is diagnostic for many carbonyl compounds.",
+      "keyFeatures": ["Base peak m/z 43 = [CH₃CO]⁺ (α-cleavage)", "McLafferty rearrangement gives m/z 58 (loss of ethene, 28)", "McLafferty peak = M − 28 when γ-H is available", "Same M⁺ (86) as pentan-3-one — compare!", "m/z 71 = loss of CH₃ (M−15)"],
+      "peaks": [
+        { "mz": 86, "relativeAbundance": 20, "ionFormula": "[C₅H₁₀O]⁺•", "ionType": "molecular", "label": "M⁺ (86)", "fragmentLabel": "Pentan-2-one molecular ion [C₅H₁₀O]⁺•", "explanation": "Molecular ion at m/z = 5(12)+10(1)+16 = 86. Same M⁺ as pentan-3-one — look at the fragmentation to distinguish them!" },
+        { "mz": 71, "relativeAbundance": 10, "ionFormula": "[C₄H₇O]⁺", "ionType": "fragment", "label": "M−15 (71)", "fragmentLabel": "[C₄H₇O]⁺ = M−CH₃ (m/z 71)", "explanation": "α-cleavage: loss of CH₃• from the methyl side: [CH₃CO(CH₂)₂CH₃]⁺• → [OC(CH₂)₂CH₃]⁺ + CH₃•. m/z = 71." },
+        { "mz": 58, "relativeAbundance": 16, "ionFormula": "[CH₃CO−CH₂]⁺•", "ionType": "fragment", "label": "McLafferty (58)", "fragmentLabel": "McLafferty rearrangement product [C₃H₆O]⁺• (m/z 58)", "explanation": "McCLAFFERTY REARRANGEMENT: A γ-hydrogen (on C-4) migrates to the carbonyl oxygen via a 6-membered cyclic transition state, simultaneously breaking the Cβ−Cγ bond. Products: [CH₃−CO=CH₂]⁺• (m/z 58, methylenol cation) + •CH₂CH₃ (radical). m/z = 58 = M − 28 (loss of C₂H₄). This rearrangement is only possible when there is a γ-hydrogen — pentan-3-one CANNOT undergo this rearrangement!" },
+        { "mz": 43, "relativeAbundance": 100, "ionFormula": "[CH₃CO]⁺", "ionType": "base", "label": "CH₃CO⁺ (base, 43)", "fragmentLabel": "Acetyl cation [CH₃CO]⁺ (base peak, m/z 43)", "explanation": "BASE PEAK. α-CLEAVAGE: loss of n-propyl radical (C₃H₇•, mass 43) from the propyl side of the carbonyl: [CH₃CO(CH₂)₂CH₃]⁺• → [CH₃CO]⁺ + •(CH₂)₂CH₃. The acetyl cation [CH₃CO]⁺ at m/z 43. Same as butanone and propanone base peaks." },
+        { "mz": 41, "relativeAbundance": 12, "ionFormula": "[C₃H₅]⁺", "ionType": "fragment", "label": "C₃H₅⁺", "fragmentLabel": "Allyl cation C₃H₅⁺ (m/z 41)", "explanation": "Allyl cation from fragmentation of the propyl group region. m/z = 41." },
+        { "mz": 27, "relativeAbundance": 7, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Further fragmentation. m/z = 27." }
+      ]
+    },
+    {
+      "id": "pentan3one",
+      "name": "Pentan-3-one",
+      "formula": "C₂H₅COC₂H₅",
+      "molecularFormula": "C5H10O",
+      "molecularMass": 86,
+      "series": "Ketones",
+      "iupacName": "Pentan-3-one (Diethyl Ketone)",
+      "description": "Pentan-3-one is a symmetric diethyl ketone. It shares the same molecular formula and M⁺ (86) as pentan-2-one. Its base peak at m/z 57 ([C₂H₅CO]⁺) and the strong complementary peak at m/z 29 ([C₂H₅]⁺) clearly distinguish it. Importantly, pentan-3-one CANNOT undergo the McLafferty rearrangement (no γ-hydrogen on the methyl of CH₃CO — there is no CH₃ group!).",
+      "keyFeatures": ["Isomer of pentan-2-one (same M⁺ = 86)", "Base peak m/z 57 = [C₂H₅CO]⁺ (key distinction!)", "Strong m/z 29 = [C₂H₅]⁺ — complementary pair", "NO McLafferty rearrangement (no γ-H)", "Symmetric ketone: one type of α-cleavage"],
+      "peaks": [
+        { "mz": 86, "relativeAbundance": 19, "ionFormula": "[C₂H₅COC₂H₅]⁺•", "ionType": "molecular", "label": "M⁺ (86)", "fragmentLabel": "Pentan-3-one molecular ion [C₅H₁₀O]⁺•", "explanation": "Molecular ion at m/z = 86. SAME as pentan-2-one. Indistinguishable by M⁺ alone — the α-cleavage fragments are completely different!" },
+        { "mz": 57, "relativeAbundance": 100, "ionFormula": "[C₂H₅CO]⁺", "ionType": "base", "label": "C₂H₅CO⁺ (base, 57)", "fragmentLabel": "Propanoyl cation [C₂H₅CO]⁺ (base peak, m/z 57)", "explanation": "BASE PEAK. α-CLEAVAGE: loss of C₂H₅• from either side of the symmetric carbonyl: [C₂H₅COC₂H₅]⁺• → [C₂H₅CO]⁺ + C₂H₅•. The propanoyl (acylium) cation [C₂H₅−C≡O]⁺ at m/z = 57. This peak DOES NOT APPEAR in pentan-2-one (which has m/z 43 as base peak). KEY DISTINCTION between the two isomers." },
+        { "mz": 29, "relativeAbundance": 95, "ionFormula": "[C₂H₅]⁺", "ionType": "fragment", "label": "C₂H₅⁺ (29)", "fragmentLabel": "Ethyl cation C₂H₅⁺ (m/z 29)", "explanation": "COMPLEMENTARY FRAGMENT to m/z 57. The other product of α-cleavage: [C₂H₅COC₂H₅]⁺• → [C₂H₅CO]⁺ + •C₂H₅, or the ethyl cation directly. Strong at 95% — another diagnostic feature distinguishing pentan-3-one from pentan-2-one." },
+        { "mz": 28, "relativeAbundance": 8, "ionFormula": "[CO]⁺•", "ionType": "fragment", "label": "CO⁺• (28)", "fragmentLabel": "CO⁺• radical cation (m/z 28)", "explanation": "CO⁺• from decarbonylation of the propanoyl cation: [C₂H₅CO]⁺ → [C₂H₅]⁺ + CO, or [C₂H₅CO]⁺ → [CO]⁺• + C₂H₅. m/z = 28." },
+        { "mz": 27, "relativeAbundance": 10, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Further fragmentation. m/z = 27." }
+      ]
+    },
+    {
+      "id": "ethanoic_acid",
+      "name": "Ethanoic Acid (Acetic Acid)",
+      "formula": "CH₃COOH",
+      "molecularFormula": "C2H4O2",
+      "molecularMass": 60,
+      "series": "Carboxylic Acids",
+      "iupacName": "Ethanoic Acid (Acetic Acid)",
+      "description": "Ethanoic acid shows a strong molecular ion (carboxylic acids have relatively stable M⁺). The base peak at m/z 45 is the carboxyl cation [COOH]⁺ (or [CO₂H]⁺). The acetyl cation [CH₃CO]⁺ at m/z 43 is also significant. This pattern — strong m/z 45 [COOH]⁺ and m/z 17 [OH]⁺ — is diagnostic for carboxylic acids.",
+      "keyFeatures": ["Strong M⁺ at m/z 60 (RCOOH have stable M⁺)", "Base peak m/z 45 = [COOH]⁺ — diagnostic for all carboxylic acids", "m/z 43 = [CH₃CO]⁺", "Loss of OH (m/z 17) and OH₂ seen", "m/z 15 = CH₃⁺"],
+      "peaks": [
+        { "mz": 60, "relativeAbundance": 69, "ionFormula": "[CH₃COOH]⁺•", "ionType": "molecular", "label": "M⁺ (60)", "fragmentLabel": "Ethanoic acid molecular ion [CH₃COOH]⁺•", "explanation": "Strong molecular ion at m/z = 2(12)+4(1)+2(16) = 60. Carboxylic acids have relatively strong M⁺ peaks — the molecule is stabilized by resonance (delocalization between C=O and OH)." },
+        { "mz": 45, "relativeAbundance": 100, "ionFormula": "[COOH]⁺", "ionType": "base", "label": "[COOH]⁺ (base, 45)", "fragmentLabel": "Carboxyl cation [COOH]⁺ / [CO₂H]⁺ (base peak, m/z 45)", "explanation": "BASE PEAK. α-CLEAVAGE: loss of CH₃• from the molecular ion: [CH₃COOH]⁺• → [COOH]⁺ + CH₃•. The carboxyl cation [COOH]⁺ (also written [CO₂H]⁺ or [HO−C≡O]⁺) at m/z = 12+16+16+1 = 45. This m/z 45 BASE PEAK IS THE DIAGNOSTIC FINGERPRINT OF CARBOXYLIC ACIDS. All carboxylic acids show this." },
+        { "mz": 43, "relativeAbundance": 70, "ionFormula": "[CH₃CO]⁺", "ionType": "fragment", "label": "CH₃CO⁺ (43)", "fragmentLabel": "Acetyl cation [CH₃CO]⁺ (m/z 43)", "explanation": "α-CLEAVAGE from the other side of the carbonyl: [CH₃COOH]⁺• → [CH₃CO]⁺ + OH•. The acetyl cation at m/z = 43. Interesting that both m/z 45 and m/z 43 are very strong in ethanoic acid." },
+        { "mz": 15, "relativeAbundance": 17, "ionFormula": "[CH₃]⁺", "ionType": "fragment", "label": "CH₃⁺ (15)", "fragmentLabel": "Methyl cation CH₃⁺ (m/z 15)", "explanation": "Methyl cation from loss of [COOH]•. m/z = 15. Confirms a CH₃ group adjacent to the carboxyl." }
+      ]
+    },
+    {
+      "id": "propanoic_acid",
+      "name": "Propanoic Acid",
+      "formula": "C₂H₅COOH",
+      "molecularFormula": "C3H6O2",
+      "molecularMass": 74,
+      "series": "Carboxylic Acids",
+      "iupacName": "Propanoic Acid (Propionic Acid)",
+      "description": "Propanoic acid shows the characteristic carboxylic acid base peak at m/z 45 ([COOH]⁺). The peak at m/z 29 ([C₂H₅]⁺ or [CHO]⁺) and the molecular ion at m/z 74 complete the picture. The pattern of m/z 45 base peak with molecular ion at M confirms a carboxylic acid of formula CₙH₂ₙO₂.",
+      "keyFeatures": ["Base peak m/z 45 = [COOH]⁺ (same as all carboxylic acids)", "M⁺ at 74 (moderate)", "m/z 29 = [C₂H₅]⁺ confirms ethyl group"],
+      "peaks": [
+        { "mz": 74, "relativeAbundance": 26, "ionFormula": "[C₂H₅COOH]⁺•", "ionType": "molecular", "label": "M⁺ (74)", "fragmentLabel": "Propanoic acid molecular ion [C₃H₆O₂]⁺•", "explanation": "Molecular ion at m/z = 3(12)+6(1)+2(16) = 74. Moderate M⁺ for a carboxylic acid." },
+        { "mz": 73, "relativeAbundance": 5, "ionFormula": "[C₂H₅COO]⁺", "ionType": "fragment", "label": "M−1 (73)", "fragmentLabel": "[M−H]⁺ (m/z 73)", "explanation": "Loss of H• from the molecular ion. m/z = 73." },
+        { "mz": 57, "relativeAbundance": 5, "ionFormula": "[C₂H₅CO]⁺", "ionType": "fragment", "label": "M−17 (57)", "fragmentLabel": "Propanoyl cation [C₂H₅CO]⁺ (M−OH, m/z 57)", "explanation": "Loss of OH• from the molecular ion: [C₂H₅COOH]⁺• → [C₂H₅CO]⁺ + OH•. m/z = 74−17 = 57. The propanoyl acylium cation." },
+        { "mz": 45, "relativeAbundance": 100, "ionFormula": "[COOH]⁺", "ionType": "base", "label": "[COOH]⁺ (base, 45)", "fragmentLabel": "Carboxyl cation [COOH]⁺ (base peak, m/z 45)", "explanation": "BASE PEAK. α-CLEAVAGE: loss of C₂H₅• from the molecular ion: [C₂H₅COOH]⁺• → [COOH]⁺ + C₂H₅•. The carboxyl cation [COOH]⁺ at m/z = 45 IS THE DIAGNOSTIC FINGERPRINT of carboxylic acids. Same peak as in ethanoic acid!" },
+        { "mz": 29, "relativeAbundance": 74, "ionFormula": "[C₂H₅]⁺", "ionType": "fragment", "label": "C₂H₅⁺ (29)", "fragmentLabel": "Ethyl cation C₂H₅⁺ (m/z 29)", "explanation": "Ethyl cation as the complementary fragment to [COOH]⁺: [C₂H₅COOH]⁺• → [C₂H₅]⁺ + •COOH. Or from α-cleavage on the ethyl side. m/z = 29. The strong m/z 29 confirms an ethyl group (C₂H₅−) attached to the carboxyl." },
+        { "mz": 28, "relativeAbundance": 42, "ionFormula": "[CO]⁺• or [C₂H₄]⁺•", "ionType": "fragment", "label": "m/z 28", "fragmentLabel": "CO⁺• or C₂H₄⁺• (m/z 28)", "explanation": "m/z 28 could be [CO]⁺• from decarbonylation or [C₂H₄]⁺• from the ethyl group losing H. m/z = 28." },
+        { "mz": 27, "relativeAbundance": 30, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Further fragmentation. m/z = 27." }
+      ]
+    },
+    {
+      "id": "methyl_ethanoate",
+      "name": "Methyl Ethanoate",
+      "formula": "CH₃COOCH₃",
+      "molecularFormula": "C3H6O2",
+      "molecularMass": 74,
+      "series": "Esters",
+      "iupacName": "Methyl Ethanoate (Methyl Acetate)",
+      "description": "Methyl ethanoate shows ester fragmentation. The base peak at m/z 43 ([CH₃CO]⁺, acetyl cation) arises from cleavage of the O−CH₃ bond. The peak at m/z 59 (M−15, loss of CH₃) gives the methoxy ester cation. Esters often show m/z 59 (M−15 for methyl esters) as a diagnostic peak.",
+      "keyFeatures": ["Base peak m/z 43 = [CH₃CO]⁺ (acetyl cation)", "m/z 59 = M−15 (loss of OCH₃ radical? No: M−CH₃ = 59)", "m/z 31 = [OCH₃]⁺ methoxyl cation", "Strong M⁺ for an ester (m/z 74)"],
+      "peaks": [
+        { "mz": 74, "relativeAbundance": 52, "ionFormula": "[CH₃COOCH₃]⁺•", "ionType": "molecular", "label": "M⁺ (74)", "fragmentLabel": "Methyl ethanoate molecular ion [C₃H₆O₂]⁺•", "explanation": "Molecular ion at m/z = 3(12)+6(1)+2(16) = 74. Relatively strong M⁺ for an ester — esters have more stable molecular ions than simple alcohols." },
+        { "mz": 59, "relativeAbundance": 41, "ionFormula": "[CH₃COO]⁺", "ionType": "fragment", "label": "M−15 (59)", "fragmentLabel": "Acetoxy cation [CH₃COO]⁺ (m/z 59, M−CH₃)", "explanation": "Loss of CH₃• from the methyl group on oxygen: [CH₃COOCH₃]⁺• → [CH₃COO]⁺ + CH₃•. m/z = 74−15 = 59. This is typical for methyl esters — the M−15 peak (m/z = M−15) is diagnostic." },
+        { "mz": 43, "relativeAbundance": 100, "ionFormula": "[CH₃CO]⁺", "ionType": "base", "label": "CH₃CO⁺ (base, 43)", "fragmentLabel": "Acetyl cation [CH₃CO]⁺ (base peak, m/z 43)", "explanation": "BASE PEAK. Cleavage of the ester O−C bond (α to the carbonyl, on the alkyl oxygen side): [CH₃CO−OCH₃]⁺• → [CH₃CO]⁺ + •OCH₃. The acetyl (acylium) cation at m/z = 43. The same peak as in propanone and butanone!" },
+        { "mz": 31, "relativeAbundance": 10, "ionFormula": "[OCH₃]⁺", "ionType": "fragment", "label": "[OCH₃]⁺ (31)", "fragmentLabel": "Methoxyl cation [OCH₃]⁺ (m/z 31)", "explanation": "Methoxyl cation from cleavage: complementary to [CH₃CO]⁺. m/z = 16+12+3 = 31. The same peak as the [CH₂OH]⁺ in primary alcohols — but here it is a minor peak." },
+        { "mz": 15, "relativeAbundance": 9, "ionFormula": "[CH₃]⁺", "ionType": "fragment", "label": "CH₃⁺ (15)", "fragmentLabel": "Methyl cation CH₃⁺ (m/z 15)", "explanation": "Methyl cation from further fragmentation. m/z = 15." }
+      ]
+    },
+    {
+      "id": "ethyl_ethanoate",
+      "name": "Ethyl Ethanoate",
+      "formula": "CH₃COOC₂H₅",
+      "molecularFormula": "C4H8O2",
+      "molecularMass": 88,
+      "series": "Esters",
+      "iupacName": "Ethyl Ethanoate (Ethyl Acetate)",
+      "description": "Ethyl ethanoate (ethyl acetate) shows ester fragmentation. The base peak at m/z 45 is the ethoxyl/ethoxycarbenium cation [OC₂H₅]⁺ or from α-cleavage. The peaks at m/z 43 ([CH₃CO]⁺) and m/z 61 (M−27) also identify the acetyl group. The M⁺ at m/z 88 is weak.",
+      "keyFeatures": ["Weak M⁺ (m/z 88) — esters fragment easily", "Base peak m/z 45 = [OC₂H₅]⁺ or [CH₃CHOH]⁺", "m/z 43 = [CH₃CO]⁺ (acetyl cation)", "m/z 61 = M−27 (loss of CH₂=CH₂ + H? or CO+H₂O)"],
+      "peaks": [
+        { "mz": 88, "relativeAbundance": 8, "ionFormula": "[CH₃COOC₂H₅]⁺•", "ionType": "molecular", "label": "M⁺ (88)", "fragmentLabel": "Ethyl ethanoate molecular ion [C₄H₈O₂]⁺•", "explanation": "Molecular ion at m/z = 4(12)+8(1)+2(16) = 88. Weak peak — larger esters fragment more easily." },
+        { "mz": 73, "relativeAbundance": 5, "ionFormula": "[CH₃COOC₂H₄]⁺", "ionType": "fragment", "label": "M−15 (73)", "fragmentLabel": "[M−CH₃]⁺ (m/z 73)", "explanation": "Loss of CH₃• from the M⁺. m/z = 73." },
+        { "mz": 61, "relativeAbundance": 6, "ionFormula": "[CH₃COO + C₂H₅ − C₂H₅]⁺", "ionType": "fragment", "label": "M−27 (61)", "fragmentLabel": "[CH₃COOH + H]⁺ — rearrangement (m/z 61)", "explanation": "Rearrangement product involving loss of CH₂=CH₂ (28) and gain of H, giving protonated acetic acid [CH₃COOH₂]⁺ at m/z = 61. This McLafferty-type rearrangement is common in esters." },
+        { "mz": 45, "relativeAbundance": 100, "ionFormula": "[OC₂H₅]⁺ or [CH₃CHOH]⁺", "ionType": "base", "label": "m/z 45 (base)", "fragmentLabel": "Ethoxyl/1-hydroxyethyl cation (base peak, m/z 45)", "explanation": "BASE PEAK. Cleavage of the acyl-oxygen bond: [CH₃CO−OC₂H₅]⁺• → CH₃CO• + [OC₂H₅]⁺ or [CH₃CHOH]⁺. The ion at m/z = 45 is diagnostic for ethyl esters. Note this is the same m/z as the carboxyl cation [COOH]⁺ in carboxylic acids! High-resolution MS would distinguish them." },
+        { "mz": 43, "relativeAbundance": 35, "ionFormula": "[CH₃CO]⁺", "ionType": "fragment", "label": "CH₃CO⁺ (43)", "fragmentLabel": "Acetyl cation [CH₃CO]⁺ (m/z 43)", "explanation": "Cleavage of the ester on the other side: [CH₃CO−OC₂H₅]⁺• → [CH₃CO]⁺ + •OC₂H₅. The acetyl cation at m/z = 43. Always seen in ethanoate esters." },
+        { "mz": 29, "relativeAbundance": 12, "ionFormula": "[C₂H₅]⁺", "ionType": "fragment", "label": "C₂H₅⁺", "fragmentLabel": "Ethyl cation C₂H₅⁺ (m/z 29)", "explanation": "Ethyl cation from further fragmentation. m/z = 29." },
+        { "mz": 27, "relativeAbundance": 10, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Further fragmentation. m/z = 27." }
+      ]
+    },
+    {
+      "id": "ethylamine",
+      "name": "Ethylamine",
+      "formula": "C₂H₅NH₂",
+      "molecularFormula": "C2H7N",
+      "molecularMass": 45,
+      "series": "Amines",
+      "iupacName": "Ethanamine (Ethylamine)",
+      "description": "Ethylamine has an ODD molecular mass (45) because it contains one nitrogen (the Nitrogen Rule). The base peak at m/z 44 (M−1, loss of H) and the strong peak at m/z 30 ([CH₂=NH₂]⁺, aminomethyl cation) are characteristic of primary amines. α-cleavage adjacent to the nitrogen gives the iminium ion.",
+      "keyFeatures": ["ODD M⁺ (45) → odd number of nitrogen atoms (Nitrogen Rule)", "Base peak m/z 44 = M−1 (loss of H)", "m/z 30 = [CH₂NH₂]⁺ — diagnostic for primary amines", "α-cleavage gives iminium ion [RCH=NH₂]⁺", "Amines generally show strong molecular ions"],
+      "peaks": [
+        { "mz": 45, "relativeAbundance": 48, "ionFormula": "[C₂H₅NH₂]⁺•", "ionType": "molecular", "label": "M⁺ (45) ODD!", "fragmentLabel": "Ethylamine molecular ion [C₂H₇N]⁺• — ODD MASS!", "explanation": "Molecular ion at m/z = 2(12)+7(1)+14 = 45. ODD molecular mass — applies the NITROGEN RULE: an odd M⁺ indicates an ODD number of nitrogen atoms. m/z 45 confirms ONE nitrogen in this molecule." },
+        { "mz": 44, "relativeAbundance": 100, "ionFormula": "[C₂H₆N]⁺", "ionType": "base", "label": "M−1 (base, 44)", "fragmentLabel": "[CH₃CHNH₂]⁺ — α-cleavage M−1 (base peak, m/z 44)", "explanation": "BASE PEAK. Loss of H• (often from the α-carbon) gives the iminium ion [CH₃CH=NH₂]⁺. Alternatively, this is the M−1 peak via loss of H. The nitrogen lone pair stabilizes the positive charge. m/z = 44." },
+        { "mz": 43, "relativeAbundance": 27, "ionFormula": "[C₂H₅N]⁺•", "ionType": "fragment", "label": "M−2 (43)", "fragmentLabel": "[C₂H₅N]⁺• (M−2, m/z 43)", "explanation": "Loss of 2H (as H₂) from the molecular ion or further fragmentation. m/z = 43." },
+        { "mz": 30, "relativeAbundance": 72, "ionFormula": "[CH₂NH₂]⁺", "ionType": "fragment", "label": "CH₂NH₂⁺ (30)", "fragmentLabel": "Aminomethyl cation [CH₂=NH₂]⁺ (m/z 30) — diagnostic!", "explanation": "α-CLEAVAGE: Loss of CH₃• from [CH₃−CH−NH₂]⁺•: → [CH₂=NH₂]⁺ + CH₃•. The aminomethyl (or methyleneamine) cation [CH₂=NH₂]⁺ at m/z = 12+2+14+2 = 30 is DIAGNOSTIC for primary amines." },
+        { "mz": 28, "relativeAbundance": 62, "ionFormula": "[CH₂=NH]⁺•", "ionType": "fragment", "label": "CH₂=NH⁺• (28)", "fragmentLabel": "Methyleneimine radical cation [CH₂=NH]⁺• (m/z 28)", "explanation": "Loss of H from [CH₂=NH₂]⁺ gives [CH₂=NH]⁺• at m/z = 12+2+14+1 = 29? Wait: 12+2(1)+14 = 28. The methyleneimine radical cation." },
+        { "mz": 27, "relativeAbundance": 34, "ionFormula": "[HCN]⁺• or [C₂H₃]⁺", "ionType": "fragment", "label": "m/z 27", "fragmentLabel": "HCN⁺• or C₂H₃⁺ (m/z 27)", "explanation": "m/z 27 can be [HCN]⁺• (12+1+14 = 27) from nitrogen-containing fragments, or the vinyl cation [C₂H₃]⁺ from the carbon chain." }
+      ]
+    },
+    {
+      "id": "propylamine",
+      "name": "Propylamine",
+      "formula": "C₃H₇NH₂",
+      "molecularFormula": "C3H9N",
+      "molecularMass": 59,
+      "series": "Amines",
+      "iupacName": "Propan-1-amine (Propylamine)",
+      "description": "Propylamine has an odd M⁺ (59) confirming one nitrogen atom. The base peak at m/z 44 ([CH₂=NHCH₃]⁺) arises from α-cleavage losing CH₃•. This is distinct from the M−1 pattern. The peak at m/z 30 ([CH₂=NH₂]⁺) confirms a primary amine.",
+      "keyFeatures": ["ODD M⁺ (59) → one nitrogen (Nitrogen Rule)", "Base peak m/z 44 = iminium ion [CH₂=NHCH₃]⁺ (α-cleavage)", "m/z 30 = [CH₂NH₂]⁺ confirms primary amine"],
+      "peaks": [
+        { "mz": 59, "relativeAbundance": 36, "ionFormula": "[C₃H₇NH₂]⁺•", "ionType": "molecular", "label": "M⁺ (59) ODD", "fragmentLabel": "Propylamine molecular ion [C₃H₉N]⁺•", "explanation": "Molecular ion at m/z = 3(12)+9(1)+14 = 59. ODD mass — NITROGEN RULE confirms one nitrogen atom. M⁺ is moderate." },
+        { "mz": 58, "relativeAbundance": 42, "ionFormula": "[C₃H₈N]⁺", "ionType": "fragment", "label": "M−1 (58)", "fragmentLabel": "[CH₃CH₂CH=NH₂]⁺ (M−1, m/z 58)", "explanation": "Loss of H• from the α-carbon: [C₃H₇NH₂]⁺• → [C₃H₆NH₂]⁺ + H•. m/z = 58." },
+        { "mz": 44, "relativeAbundance": 100, "ionFormula": "[CH₂=NHCH₃]⁺", "ionType": "base", "label": "CH₂=NHCH₃⁺ (base, 44)", "fragmentLabel": "N-methyleneamine cation [CH₂=NHCH₃]⁺ (base peak, m/z 44)", "explanation": "BASE PEAK. α-CLEAVAGE: loss of C₂H₅• from [CH₂−CH₂−CH₃ adjacent to NH₂]⁺•: → [CH₂=NH₂ + CH₃ chain? Actually: [CH₃CH₂CH₂NH₂]⁺• → [CH₂=NHCH₃ or CH₂=NH₂−CH₂−?] + •CH₂CH₃... The iminium ion at m/z = 44 by α-cleavage losing C₂H₅•." },
+        { "mz": 41, "relativeAbundance": 20, "ionFormula": "[C₃H₅]⁺ or [C₂H₄N]⁺", "ionType": "fragment", "label": "m/z 41", "fragmentLabel": "C₃H₅⁺ or C₂H₄N⁺ (m/z 41)", "explanation": "m/z 41 — either a hydrocarbon or nitrogen-containing fragment. m/z = 41." },
+        { "mz": 30, "relativeAbundance": 28, "ionFormula": "[CH₂NH₂]⁺", "ionType": "fragment", "label": "CH₂NH₂⁺ (30)", "fragmentLabel": "Aminomethyl cation [CH₂=NH₂]⁺ (m/z 30)", "explanation": "Aminomethyl cation [CH₂=NH₂]⁺ at m/z = 30. Same as in ethylamine and ALL primary amines. This peak at m/z 30 is a consistent diagnostic feature of primary aliphatic amines." },
+        { "mz": 28, "relativeAbundance": 28, "ionFormula": "[CH₂=NH]⁺•", "ionType": "fragment", "label": "CH₂=NH⁺• (28)", "fragmentLabel": "Methyleneimine radical cation (m/z 28)", "explanation": "Loss of H from [CH₂=NH₂]⁺ gives the methyleneimine cation. m/z = 28." }
+      ]
+    },
+    {
+      "id": "chloromethane",
+      "name": "Chloromethane",
+      "formula": "CH₃Cl",
+      "molecularFormula": "CH3Cl",
+      "molecularMass": 50,
+      "series": "Halogenoalkanes",
+      "iupacName": "Chloromethane (Methyl Chloride)",
+      "description": "Chloromethane demonstrates the characteristic M and M+2 peaks of a chlorine-containing compound. The ³⁵Cl molecular ion at m/z 50 and the ³⁷Cl molecular ion at m/z 52 appear in approximately a 3:1 ratio (reflecting the 75.5:24.5 natural abundance of ³⁵Cl:³⁷Cl). This 3:1 doublet pattern is the DIAGNOSTIC fingerprint of ONE chlorine atom.",
+      "keyFeatures": ["M and M+2 peaks in ~3:1 ratio (one Cl atom)", "³⁵Cl molecular ion at m/z 50 (base)", "³⁷Cl molecular ion at m/z 52 (~33%)", "m/z 15 = CH₃⁺ (after loss of Cl•)", "Cl isotope pattern is diagnostic"],
+      "peaks": [
+        { "mz": 50, "relativeAbundance": 100, "ionFormula": "[CH₃³⁵Cl]⁺•", "ionType": "base", "label": "M⁺ ³⁵Cl (base, 50)", "fragmentLabel": "Chloromethane with ³⁵Cl — molecular ion (base peak, m/z 50)", "explanation": "BASE PEAK = MOLECULAR ION with ³⁵Cl. m/z = 12+3(1)+35 = 50. Natural abundance of ³⁵Cl = 75.5%, so this is the more abundant isotopologue. Assigned 100% (base peak). Note: this is M, not an M+1 carbon peak." },
+        { "mz": 52, "relativeAbundance": 32, "ionFormula": "[CH₃³⁷Cl]⁺•", "ionType": "mplus2", "label": "M+2 ³⁷Cl (52)", "fragmentLabel": "Chloromethane with ³⁷Cl — M+2 peak (m/z 52)", "explanation": "M+2 PEAK. Molecular ion with ³⁷Cl. m/z = 12+3(1)+37 = 52. Natural abundance of ³⁷Cl = 24.5%. Relative to M (³⁵Cl = 100%), this peak appears at ~32% (= 24.5/75.5 × 100 ≈ 32%). The 3:1 ratio (100:32 ≈ 3:1) is the FINGERPRINT OF ONE CHLORINE ATOM." },
+        { "mz": 15, "relativeAbundance": 17, "ionFormula": "[CH₃]⁺", "ionType": "fragment", "label": "CH₃⁺ (15)", "fragmentLabel": "Methyl cation CH₃⁺ (m/z 15)", "explanation": "Loss of Cl• from the molecular ion: [CH₃Cl]⁺• → [CH₃]⁺ + Cl•. Both isotopologues (m/z 50 and 52) lose their chlorine, giving the same CH₃⁺ peak at m/z = 15. Only ONE peak (no isotope splitting) because the chlorine atom has been lost." }
+      ]
+    },
+    {
+      "id": "chloroethane",
+      "name": "Chloroethane",
+      "formula": "C₂H₅Cl",
+      "molecularFormula": "C2H5Cl",
+      "molecularMass": 64,
+      "series": "Halogenoalkanes",
+      "iupacName": "Chloroethane (Ethyl Chloride)",
+      "description": "Chloroethane shows the 3:1 M:M+2 chlorine isotope pattern (m/z 64 and 66). The loss of HCl (mass 36 for ³⁵Cl) gives the ethylene radical cation at m/z 28. The ethyl cation (m/z 29) is produced by loss of ³⁵Cl•.",
+      "keyFeatures": ["3:1 M:M+2 pattern (one Cl)", "M⁺ at m/z 64 (³⁵Cl) and 66 (³⁷Cl)", "Loss of ³⁵Cl• gives m/z 29 (C₂H₅⁺)", "Loss of HCl (36) gives m/z 28 (C₂H₄⁺•)"],
+      "peaks": [
+        { "mz": 64, "relativeAbundance": 100, "ionFormula": "[C₂H₅³⁵Cl]⁺•", "ionType": "base", "label": "M⁺ ³⁵Cl (base, 64)", "fragmentLabel": "Chloroethane with ³⁵Cl (base peak, m/z 64)", "explanation": "BASE PEAK = MOLECULAR ION with ³⁵Cl. m/z = 2(12)+5(1)+35 = 64. The 3:1 doublet confirms ONE chlorine atom." },
+        { "mz": 66, "relativeAbundance": 33, "ionFormula": "[C₂H₅³⁷Cl]⁺•", "ionType": "mplus2", "label": "M+2 ³⁷Cl (66)", "fragmentLabel": "Chloroethane with ³⁷Cl — M+2 peak (m/z 66)", "explanation": "M+2 PEAK. Molecular ion with ³⁷Cl. m/z = 66. Approximately 1/3 the intensity of m/z 64, confirming ONE chlorine atom (3:1 ratio)." },
+        { "mz": 29, "relativeAbundance": 46, "ionFormula": "[C₂H₅]⁺", "ionType": "fragment", "label": "C₂H₅⁺ (29)", "fragmentLabel": "Ethyl cation C₂H₅⁺ (m/z 29)", "explanation": "Loss of ³⁵Cl• from the [³⁵Cl] molecular ion: [C₂H₅³⁵Cl]⁺• → [C₂H₅]⁺ + ³⁵Cl•. The ethyl cation at m/z = 2(12)+5(1) = 29. Only ONE peak here (no isotope splitting) because the chlorine has been ejected as a radical." },
+        { "mz": 28, "relativeAbundance": 40, "ionFormula": "[C₂H₄]⁺•", "ionType": "fragment", "label": "C₂H₄⁺• (28)", "fragmentLabel": "Ethylene radical cation [C₂H₄]⁺• (m/z 28)", "explanation": "Loss of HCl (mass = 36 for H+³⁵Cl) from M⁺: [C₂H₅³⁵Cl]⁺• → [C₂H₄]⁺• + HCl. m/z = 28. Elimination of HCl is common in halogenoalkane fragmentation." },
+        { "mz": 27, "relativeAbundance": 12, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Further fragmentation. m/z = 27." }
+      ]
+    },
+    {
+      "id": "1_chloropropane",
+      "name": "1-Chloropropane",
+      "formula": "CH₃CH₂CH₂Cl",
+      "molecularFormula": "C3H7Cl",
+      "molecularMass": 78,
+      "series": "Halogenoalkanes",
+      "iupacName": "1-Chloropropane (Propyl Chloride)",
+      "description": "1-Chloropropane shows the M:M+2 3:1 pattern for one chlorine atom at m/z 78/80. The C₃H₇⁺ cation (m/z 43) from loss of ³⁵Cl is an important peak. Compare with 2-chloropropane: same M⁺ but different fragmentation.",
+      "keyFeatures": ["3:1 M:M+2 at m/z 78/80 (one Cl)", "m/z 43 = C₃H₇⁺ (loss of Cl)", "m/z 63/65 = M−15 (loss of CH₃)", "Compare with 2-chloropropane isomer!"],
+      "peaks": [
+        { "mz": 78, "relativeAbundance": 100, "ionFormula": "[C₃H₇³⁵Cl]⁺•", "ionType": "base", "label": "M⁺ ³⁵Cl (78)", "fragmentLabel": "1-Chloropropane with ³⁵Cl (m/z 78)", "explanation": "Molecular ion with ³⁵Cl. m/z = 3(12)+7(1)+35 = 78. Base peak." },
+        { "mz": 80, "relativeAbundance": 32, "ionFormula": "[C₃H₇³⁷Cl]⁺•", "ionType": "mplus2", "label": "M+2 ³⁷Cl (80)", "fragmentLabel": "1-Chloropropane with ³⁷Cl — M+2 (m/z 80)", "explanation": "M+2 peak with ³⁷Cl. m/z = 80. ~1/3 intensity of m/z 78, confirming one Cl atom." },
+        { "mz": 63, "relativeAbundance": 52, "ionFormula": "[C₃H₇³⁵Cl − CH₃]⁺", "ionType": "fragment", "label": "M−15 ³⁵Cl (63)", "fragmentLabel": "[C₂H₄³⁵Cl]⁺ (m/z 63, M−CH₃)", "explanation": "Loss of CH₃• from the molecular ion: [CH₃CH₂CH₂³⁵Cl]⁺• → [CH₂CH₂³⁵Cl]⁺ + CH₃•. m/z = 78−15 = 63. Note this fragment still retains the Cl atom, so it also has an isotope peak (m/z 65)." },
+        { "mz": 65, "relativeAbundance": 18, "ionFormula": "[C₂H₄³⁷Cl]⁺", "ionType": "mplus2", "label": "m/z 65 (³⁷Cl)", "fragmentLabel": "[C₂H₄³⁷Cl]⁺ (m/z 65) — ³⁷Cl fragment", "explanation": "The ³⁷Cl counterpart of the m/z 63 fragment. Ratio m/z 63:65 ≈ 3:1, confirming one Cl in this fragment ion." },
+        { "mz": 43, "relativeAbundance": 42, "ionFormula": "[C₃H₇]⁺", "ionType": "fragment", "label": "C₃H₇⁺ (43)", "fragmentLabel": "Propyl cation C₃H₇⁺ (m/z 43) — loss of Cl•", "explanation": "Loss of ³⁵Cl• from the molecular ion: [C₃H₇³⁵Cl]⁺• → [C₃H₇]⁺ + ³⁵Cl•. The propyl cation at m/z = 3(12)+7(1) = 43. Note: only ONE peak because the Cl has been ejected." },
+        { "mz": 41, "relativeAbundance": 40, "ionFormula": "[C₃H₅]⁺", "ionType": "fragment", "label": "C₃H₅⁺ (41)", "fragmentLabel": "Allyl cation C₃H₅⁺ (m/z 41)", "explanation": "Loss of HCl from C₃H₇⁺ or from M⁺. Allyl cation at m/z = 41." },
+        { "mz": 27, "relativeAbundance": 42, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Further fragmentation. m/z = 27." }
+      ]
+    },
+    {
+      "id": "2_chloropropane",
+      "name": "2-Chloropropane",
+      "formula": "(CH₃)₂CHCl",
+      "molecularFormula": "C3H7Cl",
+      "molecularMass": 78,
+      "series": "Halogenoalkanes",
+      "iupacName": "2-Chloropropane (Isopropyl Chloride)",
+      "description": "2-Chloropropane (same formula and M⁺ as 1-chloropropane!) shows a much stronger base peak at m/z 43 (isopropyl/propyl cation, loss of Cl). In 2-chloropropane, the Cl is on the secondary carbon and its loss directly produces the stable secondary carbocation (isopropyl cation, more stable than primary). The M+2 pattern at m/z 80 confirms one chlorine.",
+      "keyFeatures": ["Same M⁺ (78/80) as 1-chloropropane!", "MUCH stronger m/z 43 (secondary carbocation more stable)", "Loss of Cl from secondary C gives stable (CH₃)₂CH⁺", "Different fragmentation → MS distinguishes isomers"],
+      "peaks": [
+        { "mz": 78, "relativeAbundance": 100, "ionFormula": "[(CH₃)₂CH³⁵Cl]⁺•", "ionType": "base", "label": "M⁺ ³⁵Cl (78)", "fragmentLabel": "2-Chloropropane with ³⁵Cl (m/z 78)", "explanation": "Molecular ion with ³⁵Cl. m/z = 78. SAME as 1-chloropropane! Cannot distinguish isomers from M⁺ alone." },
+        { "mz": 80, "relativeAbundance": 32, "ionFormula": "[(CH₃)₂CH³⁷Cl]⁺•", "ionType": "mplus2", "label": "M+2 ³⁷Cl (80)", "fragmentLabel": "2-Chloropropane with ³⁷Cl — M+2 (m/z 80)", "explanation": "M+2 peak with ³⁷Cl. Ratio 3:1 confirms one Cl atom. Identical to 1-chloropropane's M+2 pattern." },
+        { "mz": 63, "relativeAbundance": 48, "ionFormula": "[(CH₃)₂CH³⁵Cl − CH₃]⁺", "ionType": "fragment", "label": "M−15 ³⁵Cl (63)", "fragmentLabel": "[CH(CH₃)³⁵Cl]⁺ (m/z 63, M−CH₃)", "explanation": "Loss of CH₃• from the molecular ion. m/z = 63. Same as in 1-chloropropane but notice different relative intensities." },
+        { "mz": 43, "relativeAbundance": 100, "ionFormula": "[(CH₃)₂CH]⁺", "ionType": "base", "label": "isoPropyl⁺ (base, 43)", "fragmentLabel": "Isopropyl cation [(CH₃)₂CH]⁺ (base peak, m/z 43) — DIFFERENT from 1-isomer!", "explanation": "BASE PEAK. Loss of ³⁵Cl• from the secondary carbon: [(CH₃)₂CH³⁵Cl]⁺• → [(CH₃)₂CH]⁺ + ³⁵Cl•. The isopropyl cation [(CH₃)₂CH]⁺ is a SECONDARY CARBOCATION — more stable than the primary propyl cation in 1-chloropropane. Hence m/z 43 is MUCH more intense here. This is the key difference between the two isomers!" },
+        { "mz": 41, "relativeAbundance": 46, "ionFormula": "[C₃H₅]⁺", "ionType": "fragment", "label": "C₃H₅⁺ (41)", "fragmentLabel": "Allyl cation C₃H₅⁺ (m/z 41)", "explanation": "Loss of HCl or further fragmentation. m/z = 41." },
+        { "mz": 39, "relativeAbundance": 25, "ionFormula": "[C₃H₃]⁺", "ionType": "fragment", "label": "C₃H₃⁺ (39)", "fragmentLabel": "Cyclopropenyl cation C₃H₃⁺ (m/z 39)", "explanation": "Further fragmentation. m/z = 39." }
+      ]
+    },
+    {
+      "id": "bromomethane",
+      "name": "Bromomethane",
+      "formula": "CH₃Br",
+      "molecularFormula": "CH3Br",
+      "molecularMass": 94,
+      "series": "Halogenoalkanes",
+      "iupacName": "Bromomethane (Methyl Bromide)",
+      "description": "Bromomethane shows the characteristic 1:1 M:M+2 doublet of ONE bromine atom (⁷⁹Br 50.7%, ⁸¹Br 49.3% — nearly equal abundances). The molecular ions at m/z 94 (with ⁷⁹Br) and m/z 96 (with ⁸¹Br) are almost equal in height. This near-equal intensity doublet is the DIAGNOSTIC PATTERN for one bromine atom.",
+      "keyFeatures": ["1:1 M:M+2 doublet (one Br atom)", "⁷⁹Br molecular ion m/z 94 ≈ same height as ⁸¹Br m/z 96", "m/z 15 = CH₃⁺ (after loss of Br)", "⁷⁹Br⁺/⁸¹Br⁺ peaks at m/z 79/81 (1:1 ratio)", "Contrast with Cl: 3:1 Cl vs ~1:1 Br"],
+      "peaks": [
+        { "mz": 94, "relativeAbundance": 100, "ionFormula": "[CH₃⁷⁹Br]⁺•", "ionType": "base", "label": "M⁺ ⁷⁹Br (94)", "fragmentLabel": "Bromomethane with ⁷⁹Br (base peak, m/z 94)", "explanation": "Molecular ion with ⁷⁹Br. m/z = 12+3(1)+79 = 94. ⁷⁹Br is very slightly more abundant (50.7%) than ⁸¹Br (49.3%), so this is just barely the base peak." },
+        { "mz": 96, "relativeAbundance": 97, "ionFormula": "[CH₃⁸¹Br]⁺•", "ionType": "mplus2", "label": "M+2 ⁸¹Br (96)", "fragmentLabel": "Bromomethane with ⁸¹Br — M+2 peak (m/z 96)", "explanation": "M+2 PEAK. Almost EQUAL intensity (~97%) to M⁺ at m/z 94. This near-1:1 ratio is the DIAGNOSTIC FINGERPRINT OF ONE BROMINE ATOM. Contrast with chlorine (3:1 ratio)! m/z = 96." },
+        { "mz": 79, "relativeAbundance": 22, "ionFormula": "⁷⁹Br⁺", "ionType": "fragment", "label": "⁷⁹Br⁺ (79)", "fragmentLabel": "⁷⁹Br⁺ atomic bromine ion (m/z 79)", "explanation": "Atomic bromine-79 cation formed by loss of CH₃• from the M⁺ ion. These Br⁺ peaks always appear as a near-equal doublet at m/z 79 and 81." },
+        { "mz": 81, "relativeAbundance": 21, "ionFormula": "⁸¹Br⁺", "ionType": "fragment", "label": "⁸¹Br⁺ (81)", "fragmentLabel": "⁸¹Br⁺ atomic bromine ion (m/z 81)", "explanation": "Atomic bromine-81 cation. Near-equal to m/z 79 peak (1:1 ratio). The presence of two near-equal Br⁺ peaks at m/z 79 and 81 confirms bromine in the molecule." },
+        { "mz": 15, "relativeAbundance": 38, "ionFormula": "[CH₃]⁺", "ionType": "fragment", "label": "CH₃⁺ (15)", "fragmentLabel": "Methyl cation CH₃⁺ (m/z 15)", "explanation": "Loss of Br• from the molecular ion: [CH₃Br]⁺• → [CH₃]⁺ + Br•. Single peak at m/z 15 — after the bromine leaves, no isotope splitting in the methyl fragment." }
+      ]
+    },
+    {
+      "id": "1_bromopropane",
+      "name": "1-Bromopropane",
+      "formula": "CH₃CH₂CH₂Br",
+      "molecularFormula": "C3H7Br",
+      "molecularMass": 122,
+      "series": "Halogenoalkanes",
+      "iupacName": "1-Bromopropane (Propyl Bromide)",
+      "description": "1-Bromopropane shows the near-equal 1:1 M:M+2 doublet at m/z 122/124 diagnostic for ONE bromine. Loss of ⁷⁹Br• gives the propyl cation (m/z 43). The ⁷⁹Br⁺/⁸¹Br⁺ doublet at 79/81 is visible. This is a good example of a larger bromine-containing molecule.",
+      "keyFeatures": ["1:1 M:M+2 doublet at m/z 122/124 (one Br)", "m/z 43 = C₃H₇⁺ (loss of Br)", "⁷⁹Br⁺/⁸¹Br⁺ at m/z 79/81 visible"],
+      "peaks": [
+        { "mz": 122, "relativeAbundance": 36, "ionFormula": "[C₃H₇⁷⁹Br]⁺•", "ionType": "molecular", "label": "M⁺ ⁷⁹Br (122)", "fragmentLabel": "1-Bromopropane with ⁷⁹Br (m/z 122)", "explanation": "Molecular ion with ⁷⁹Br. m/z = 3(12)+7(1)+79 = 122. Moderate M⁺." },
+        { "mz": 124, "relativeAbundance": 35, "ionFormula": "[C₃H₇⁸¹Br]⁺•", "ionType": "mplus2", "label": "M+2 ⁸¹Br (124)", "fragmentLabel": "1-Bromopropane with ⁸¹Br — M+2 (m/z 124)", "explanation": "M+2 PEAK. Nearly equal to M⁺ (~97% relative intensity). The near-1:1 doublet at m/z 122:124 confirms ONE BROMINE ATOM." },
+        { "mz": 79, "relativeAbundance": 100, "ionFormula": "⁷⁹Br⁺", "ionType": "base", "label": "⁷⁹Br⁺ (base, 79)", "fragmentLabel": "⁷⁹Br⁺ bromine atomic cation (base peak, m/z 79)", "explanation": "BASE PEAK. ⁷⁹Br⁺ from loss of CH₃CH₂CH₂•. m/z = 79. Large in 1-bromopropane." },
+        { "mz": 81, "relativeAbundance": 99, "ionFormula": "⁸¹Br⁺", "ionType": "fragment", "label": "⁸¹Br⁺ (81)", "fragmentLabel": "⁸¹Br⁺ bromine atomic cation (m/z 81)", "explanation": "⁸¹Br⁺ at near-equal intensity to ⁷⁹Br⁺ (~99%). This 1:1 Br pair confirms bromine." },
+        { "mz": 43, "relativeAbundance": 28, "ionFormula": "[C₃H₇]⁺", "ionType": "fragment", "label": "C₃H₇⁺ (43)", "fragmentLabel": "Propyl cation C₃H₇⁺ (m/z 43)", "explanation": "Loss of ⁷⁹Br• from the molecular ion: [C₃H₇⁷⁹Br]⁺• → [C₃H₇]⁺ + ⁷⁹Br•. Propyl cation at m/z = 43." },
+        { "mz": 41, "relativeAbundance": 35, "ionFormula": "[C₃H₅]⁺", "ionType": "fragment", "label": "C₃H₅⁺ (41)", "fragmentLabel": "Allyl cation C₃H₅⁺ (m/z 41)", "explanation": "Allyl cation from further fragmentation or HBr elimination. m/z = 41." },
+        { "mz": 27, "relativeAbundance": 31, "ionFormula": "[C₂H₃]⁺", "ionType": "fragment", "label": "C₂H₃⁺", "fragmentLabel": "Vinyl cation C₂H₃⁺ (m/z 27)", "explanation": "Further fragmentation. m/z = 27." }
+      ]
+    }
+  ]
+}

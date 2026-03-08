@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MassSpec — Interactive Mass Spectrometry Learning Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800&family=Share+Tech+Mono&family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05080f;--bg2:#080d18;--bg3:#0d1428;--bg4:#111d35;
+  --border:#1a2d50;--border2:#243d6a;
+  --cyan:#12e8ff;--cyan-dim:#0a9ab0;--cyan-glow:rgba(18,232,255,0.15);
+  --orange:#ff8533;--orange-dim:#b55e24;
+  --green:#33ff99;--red:#ff3366;--purple:#a855f7;--gold:#ffd700;
+  --txt:#c8d8e8;--txt2:#7a9ab8;--txt3:#3d5a7a;
+  --bar-mol:#12e8ff;--bar-base:#ff8533;--bar-frag:#4488cc;
+  --bar-iso:#a855f7;--bar-m1:#33ff99;--bar-m2:#ff9944;
+  --radius:10px;--radius-sm:6px;
+  --font-ui:'Exo 2',sans-serif;--font-mono:'Share Tech Mono',monospace;
+  --font-head:'Orbitron',sans-serif;
+  --trans:0.2s ease;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--cyan-dim)}
+#app-header{background:linear-gradient(135deg,var(--bg2) 0%,var(--bg3) 100%);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:16px;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,0.5)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--cyan),var(--cyan-dim));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#000;font-family:var(--font-head);letter-spacing:-1px}
+.logo-text{font-family:var(--font-head);font-size:1.1rem;font-weight:600;background:linear-gradient(90deg,var(--cyan),var(--txt));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-sub{font-size:0.65rem;color:var(--txt2);font-family:var(--font-mono);letter-spacing:2px;line-height:1}
+#nav-tabs{display:flex;align-items:center;gap:2px;margin-left:auto}
+.nav-tab{padding:8px 18px;border:none;background:transparent;color:var(--txt2);font-family:var(--font-ui);font-size:0.85rem;font-weight:500;cursor:pointer;border-radius:var(--radius-sm);transition:all var(--trans);display:flex;align-items:center;gap:6px;letter-spacing:0.3px;white-space:nowrap}
+.nav-tab:hover{background:var(--bg4);color:var(--txt)}
+.nav-tab.active{background:var(--cyan-glow);color:var(--cyan);border:1px solid rgba(18,232,255,0.25)}
+#main{max-width:1400px;margin:0 auto;padding:24px}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadeIn 0.3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.section-title{font-family:var(--font-head);font-size:1.4rem;font-weight:600;color:var(--cyan);letter-spacing:1px;margin-bottom:4px;display:flex;align-items:center;gap:10px}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent);margin-left:8px}
+.section-subtitle{color:var(--txt2);font-size:0.88rem;margin-bottom:24px}
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+#notes-search-wrap{display:flex;gap:12px;margin-bottom:20px;align-items:center;flex-wrap:wrap}
+#notes-search{flex:1;min-width:200px;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--txt);font-family:var(--font-ui);font-size:0.9rem;outline:none;transition:border-color var(--trans)}
+#notes-search:focus{border-color:var(--cyan-dim)}
+#notes-search::placeholder{color:var(--txt3)}
+.notes-controls{display:flex;gap:8px}
+.btn-sm{padding:8px 14px;border:1px solid var(--border);background:var(--bg4);color:var(--txt2);border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-ui);font-size:0.82rem;transition:all var(--trans);white-space:nowrap}
+.btn-sm:hover{border-color:var(--cyan-dim);color:var(--cyan)}
+.collapsible{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;transition:border-color var(--trans)}
+.collapsible:hover{border-color:var(--border2)}
+.collapsible.open{border-color:var(--cyan-dim)}
+.collapsible-header{width:100%;background:var(--bg3);border:none;padding:16px 20px;cursor:pointer;display:flex;align-items:center;gap:12px;color:var(--txt);font-family:var(--font-ui);font-size:0.95rem;font-weight:600;text-align:left;transition:background var(--trans)}
+.collapsible-header:hover{background:var(--bg4)}
+.collapsible.open .collapsible-header{background:var(--bg4);color:var(--cyan)}
+.collapsible-icon{width:28px;height:28px;border-radius:6px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:transform var(--trans);border:1px solid var(--border)}
+.collapsible.open .collapsible-icon{transform:rotate(15deg);background:var(--cyan-glow);border-color:var(--cyan-dim)}
+.collapsible-arrow{margin-left:auto;font-size:12px;color:var(--txt2);transition:transform var(--trans)}
+.collapsible.open .collapsible-arrow{transform:rotate(180deg);color:var(--cyan)}
+.collapsible-body{max-height:0;overflow:hidden;transition:max-height 0.4s ease;background:var(--bg2)}
+.collapsible.open .collapsible-body{max-height:12000px}
+.collapsible-content{padding:20px 24px;line-height:1.8;font-size:0.9rem}
+.collapsible-content h4{color:var(--cyan);margin:16px 0 8px;font-size:0.95rem;font-family:var(--font-head);font-weight:600;letter-spacing:0.5px}
+.collapsible-content h4:first-child{margin-top:0}
+.collapsible-content p{color:var(--txt);margin-bottom:12px}
+.collapsible-content ul,.collapsible-content ol{margin:8px 0 12px 20px;color:var(--txt)}
+.collapsible-content li{margin-bottom:6px}
+.collapsible-content strong{color:var(--orange);font-weight:600}
+.collapsible-content em{color:var(--cyan);font-style:normal;font-weight:500}
+.collapsible-content code{font-family:var(--font-mono);background:var(--bg3);padding:2px 6px;border-radius:4px;font-size:0.88em;color:var(--green)}
+.note-formula{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--cyan);padding:12px 16px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin:12px 0;font-family:var(--font-mono);font-size:0.92rem;color:var(--cyan)}
+.note-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.87rem}
+.note-table th{background:var(--bg3);color:var(--cyan);padding:8px 12px;text-align:left;border:1px solid var(--border);font-weight:600}
+.note-table td{padding:8px 12px;border:1px solid var(--border);color:var(--txt)}
+.note-table tr:nth-child(even) td{background:var(--bg3)}
+.note-highlight{background:var(--bg3);border:1px solid var(--orange);border-left:3px solid var(--orange);padding:12px 16px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin:12px 0;color:var(--txt)}
+.note-tip{background:var(--bg3);border:1px solid var(--green);border-left:3px solid var(--green);padding:12px 16px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin:12px 0;color:var(--txt)}
+.note-warn{background:var(--bg3);border:1px solid var(--gold);border-left:3px solid var(--gold);padding:12px 16px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin:12px 0;color:var(--txt)}
+.obj-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.72rem;font-family:var(--font-mono);margin-right:6px;vertical-align:middle}
+.badge-cape{background:rgba(255,133,51,0.15);border:1px solid var(--orange);color:var(--orange)}
+.badge-lo{background:rgba(18,232,255,0.1);border:1px solid var(--cyan-dim);color:var(--cyan)}
+#spectrum-layout{display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start}
+@media(max-width:900px){#spectrum-layout{grid-template-columns:1fr}}
+#compound-panel{position:sticky;top:88px}
+.compound-panel-inner{display:flex;flex-direction:column;gap:12px}
+#series-filter{padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--txt);font-family:var(--font-ui);font-size:0.88rem;width:100%;outline:none;cursor:pointer}
+#series-filter option{background:var(--bg3)}
+#compound-search-input{padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--txt);font-family:var(--font-ui);font-size:0.85rem;width:100%;outline:none}
+#compound-search-input:focus{border-color:var(--cyan-dim)}
+#compound-search-input::placeholder{color:var(--txt3)}
+#compound-list{max-height:340px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg2)}
+.compound-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background var(--trans);display:flex;align-items:center;gap:8px}
+.compound-item:last-child{border-bottom:none}
+.compound-item:hover{background:var(--bg3)}
+.compound-item.selected{background:var(--cyan-glow);border-left:3px solid var(--cyan)}
+.compound-item-name{font-size:0.88rem;font-weight:500;color:var(--txt);line-height:1.2}
+.compound-item-formula{font-family:var(--font-mono);font-size:0.78rem;color:var(--txt2)}
+.compound-item-mass{font-family:var(--font-mono);font-size:0.75rem;color:var(--txt3);margin-left:auto;white-space:nowrap}
+#compound-info{font-size:0.83rem;color:var(--txt2);line-height:1.6}
+#compound-info strong{color:var(--cyan);display:block;font-size:0.9rem;margin-bottom:4px}
+.info-formula{font-family:var(--font-mono);font-size:1.1rem;color:var(--orange);font-weight:600;margin-bottom:4px}
+.info-series{display:inline-block;padding:2px 8px;border-radius:4px;margin:6px 0;background:var(--bg4);border:1px solid var(--border);font-size:0.75rem;color:var(--txt2)}
+.key-feature-tag{display:inline-block;padding:3px 8px;border-radius:4px;font-size:0.72rem;background:rgba(18,232,255,0.08);border:1px solid rgba(18,232,255,0.2);color:var(--cyan);margin:2px}
+#spectrum-main{display:flex;flex-direction:column;gap:16px}
+#chart-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ctrl-label{font-size:0.78rem;color:var(--txt2);font-family:var(--font-mono)}
+.toggle-btn{padding:5px 12px;border:1px solid var(--border);background:var(--bg3);color:var(--txt2);border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-ui);font-size:0.78rem;transition:all var(--trans)}
+.toggle-btn:hover{border-color:var(--cyan-dim);color:var(--cyan)}
+.toggle-btn.on{background:var(--cyan-glow);border-color:var(--cyan);color:var(--cyan)}
+#chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;position:relative;min-height:360px}
+#spectrum-canvas{width:100%;cursor:crosshair;display:block}
+#chart-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:0.75rem;color:var(--txt2);font-family:var(--font-mono)}
+.legend-dot{width:10px;height:10px;border-radius:2px}
+#peak-info{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:20px;min-height:160px;transition:border-color var(--trans)}
+#peak-info.active{border-color:var(--cyan-dim);box-shadow:0 0 20px var(--cyan-glow)}
+.pi-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:140px;color:var(--txt3);gap:8px}
+.pi-icon{font-size:32px;opacity:0.4}
+.pi-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.pi-mz-badge{background:var(--bg4);border:2px solid;border-radius:8px;padding:8px 14px;text-align:center;flex-shrink:0}
+.pi-mz-val{font-family:var(--font-mono);font-size:1.5rem;font-weight:600;line-height:1}
+.pi-mz-label{font-size:0.7rem;color:var(--txt2);margin-top:2px;font-family:var(--font-mono)}
+.pi-meta{flex:1}
+.pi-formula{font-family:var(--font-mono);font-size:1.1rem;font-weight:600;margin-bottom:4px}
+.pi-type-badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:0.72rem;font-family:var(--font-mono);font-weight:600}
+.pi-label{font-size:0.9rem;font-weight:600;color:var(--txt);margin-bottom:6px}
+.pi-abundance{display:flex;align-items:center;gap:8px;margin:8px 0}
+.pi-abundance-bar{flex:1;height:8px;background:var(--bg4);border-radius:4px;overflow:hidden}
+.pi-abundance-fill{height:100%;border-radius:4px;transition:width 0.5s ease}
+.pi-abundance-val{font-family:var(--font-mono);font-size:0.82rem;color:var(--txt2);min-width:44px;text-align:right}
+.pi-explanation{font-size:0.85rem;line-height:1.7;color:var(--txt2);border-top:1px solid var(--border);padding-top:12px;margin-top:4px}
+.pi-explanation strong{color:var(--orange)}
+#fragment-list{display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto}
+.frag-item{padding:10px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--trans);display:grid;grid-template-columns:44px 1fr 64px;align-items:center;gap:10px}
+.frag-item:hover{border-color:var(--border2);background:var(--bg3)}
+.frag-item.selected{border-color:var(--cyan-dim);background:var(--cyan-glow)}
+.frag-mz{font-family:var(--font-mono);font-size:0.88rem;font-weight:600;color:var(--txt)}
+.frag-details{min-width:0}
+.frag-formula{font-family:var(--font-mono);font-size:0.78rem;color:var(--cyan);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.frag-label{font-size:0.78rem;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.frag-bar-wrap{display:flex;align-items:center;gap:4px}
+.frag-bar{height:6px;border-radius:3px;min-width:2px;transition:width 0.3s ease}
+.frag-abu{font-family:var(--font-mono);font-size:0.68rem;color:var(--txt3);min-width:30px;text-align:right}
+#quiz-layout{max-width:860px;margin:0 auto}
+#quiz-header{display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.quiz-progress-wrap{flex:1;min-width:200px}
+.quiz-progress-label{font-size:0.78rem;color:var(--txt2);font-family:var(--font-mono);margin-bottom:4px;display:flex;justify-content:space-between}
+.quiz-progress-bar{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.quiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--cyan-dim));transition:width 0.4s ease;border-radius:3px}
+.quiz-score-box{padding:8px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:var(--font-mono);font-size:0.88rem;color:var(--txt2);text-align:center}
+.quiz-score-box span{color:var(--green);font-weight:600}
+#question-map{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;padding:16px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius)}
+.qmap-label{font-size:0.75rem;color:var(--txt2);font-family:var(--font-mono);margin-bottom:8px;width:100%}
+.qmap-btn{width:34px;height:34px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg3);color:var(--txt3);font-size:0.8rem;cursor:pointer;transition:all var(--trans);font-family:var(--font-mono);display:flex;align-items:center;justify-content:center}
+.qmap-btn:hover{border-color:var(--border2);color:var(--txt)}
+.qmap-btn.current{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-glow)}
+.qmap-btn.answered{background:rgba(51,255,153,0.1);border-color:rgba(51,255,153,0.4);color:var(--green)}
+.qmap-btn.skipped{background:rgba(255,133,51,0.1);border-color:rgba(255,133,51,0.4);color:var(--orange)}
+.qmap-btn.wrong{background:rgba(255,51,102,0.1);border-color:rgba(255,51,102,0.4);color:var(--red)}
+#quiz-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:28px;min-height:300px;display:flex;flex-direction:column}
+.quiz-question-number{font-family:var(--font-mono);font-size:0.78rem;color:var(--txt3);margin-bottom:12px}
+.quiz-question-text{font-size:1.05rem;color:var(--txt);line-height:1.7;font-weight:500;margin-bottom:6px}
+.quiz-question-sub{font-size:0.85rem;color:var(--txt2);margin-bottom:20px;line-height:1.6}
+.quiz-options{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.quiz-option{padding:14px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--trans);font-size:0.9rem;color:var(--txt);display:flex;align-items:center;gap:10px;text-align:left;font-family:var(--font-ui);width:100%}
+.quiz-option:hover:not(.disabled){background:var(--bg4);border-color:var(--border2)}
+.quiz-option.selected{background:rgba(18,232,255,0.08);border-color:var(--cyan)}
+.quiz-option.correct{background:rgba(51,255,153,0.08);border-color:var(--green);color:var(--green)}
+.quiz-option.wrong{background:rgba(255,51,102,0.08);border-color:var(--red);opacity:0.75}
+.quiz-option.disabled{cursor:default;pointer-events:none}
+.quiz-option-letter{width:26px;height:26px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:600;flex-shrink:0;font-family:var(--font-mono)}
+.quiz-option.selected .quiz-option-letter{background:var(--cyan-glow);border-color:var(--cyan);color:var(--cyan)}
+.quiz-option.correct .quiz-option-letter{background:rgba(51,255,153,0.15);border-color:var(--green);color:var(--green)}
+.quiz-option.wrong .quiz-option-letter{background:rgba(255,51,102,0.1);border-color:var(--red);color:var(--red)}
+.quiz-fill-wrap{margin-top:16px}
+.quiz-fill-input{width:100%;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--txt);font-family:var(--font-ui);font-size:0.95rem;outline:none;transition:border-color var(--trans)}
+.quiz-fill-input:focus{border-color:var(--cyan-dim)}
+.quiz-feedback{margin-top:16px;padding:12px 16px;border-radius:var(--radius-sm);font-size:0.88rem;line-height:1.6;display:none}
+.quiz-feedback.show{display:block}
+.quiz-feedback.correct-fb{background:rgba(51,255,153,0.08);border:1px solid var(--green);color:var(--green)}
+.quiz-feedback.wrong-fb{background:rgba(255,51,102,0.06);border:1px solid var(--red);color:var(--txt)}
+.quiz-feedback.wrong-fb .fb-answer{color:var(--green);font-weight:600}
+.quiz-nav{display:flex;gap:10px;margin-top:20px;align-items:center;flex-wrap:wrap}
+.btn-quiz{padding:10px 20px;border:1px solid;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font-ui);font-size:0.88rem;font-weight:500;transition:all var(--trans)}
+.btn-quiz.primary{background:var(--cyan-glow);border-color:var(--cyan);color:var(--cyan)}
+.btn-quiz.primary:hover{background:var(--cyan);color:#000}
+.btn-quiz.secondary{background:transparent;border-color:var(--border);color:var(--txt2)}
+.btn-quiz.secondary:hover{border-color:var(--border2);color:var(--txt)}
+.btn-quiz.skip{background:transparent;border-color:var(--border);color:var(--txt3);margin-left:auto}
+.btn-quiz.skip:hover{border-color:var(--orange);color:var(--orange)}
+#quiz-results{display:none;animation:fadeIn 0.4s ease}
+#quiz-results.show{display:block}
+.result-score-ring{width:140px;height:140px;border-radius:50%;margin:20px auto;display:flex;align-items:center;justify-content:center;position:relative;background:var(--bg4)}
+.result-score-inner{text-align:center}
+.result-score-pct{font-family:var(--font-head);font-size:2.2rem;color:var(--cyan)}
+.result-score-label{font-size:0.75rem;color:var(--txt2);font-family:var(--font-mono)}
+.result-grade{font-size:1.3rem;font-weight:700;margin:8px 0;color:var(--txt)}
+.result-message{color:var(--txt2);font-size:0.9rem;margin-bottom:24px}
+.result-stats{display:flex;gap:16px;justify-content:center;margin:20px 0;flex-wrap:wrap}
+.result-stat{padding:14px 20px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);text-align:center;min-width:90px}
+.result-stat-val{font-family:var(--font-mono);font-size:1.3rem;font-weight:600}
+.result-stat-label{font-size:0.75rem;color:var(--txt2);margin-top:2px}
+.review-list{text-align:left;margin-top:24px;display:flex;flex-direction:column;gap:10px}
+.review-item{padding:12px 16px;border:1px solid;border-radius:var(--radius-sm);font-size:0.85rem}
+.review-item.ri-correct{border-color:rgba(51,255,153,0.3);background:rgba(51,255,153,0.04)}
+.review-item.ri-wrong{border-color:rgba(255,51,102,0.3);background:rgba(255,51,102,0.04)}
+.review-item.ri-skip{border-color:rgba(255,133,51,0.3);background:rgba(255,133,51,0.04)}
+.ri-q{color:var(--txt);margin-bottom:4px;font-weight:500}
+.ri-answer{font-size:0.8rem;color:var(--txt2)}
+.ri-correct-text{color:var(--green)}
+#ref-layout{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+.ref-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.ref-card h3{color:var(--cyan);font-family:var(--font-head);font-size:0.95rem;letter-spacing:0.5px;margin-bottom:12px;font-weight:600}
+#chart-tooltip{position:fixed;pointer-events:none;z-index:200;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:8px 12px;font-size:0.8rem;box-shadow:0 4px 20px rgba(0,0,0,0.5);display:none;max-width:220px}
+#chart-tooltip.show{display:block}
+.tt-mz{font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--cyan)}
+.tt-formula{font-family:var(--font-mono);font-size:0.82rem;color:var(--orange);margin:2px 0}
+.tt-type{font-size:0.75rem;color:var(--txt2)}
+.tt-abu{font-size:0.78rem;margin-top:4px;color:var(--txt)}
+#loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:var(--font-mono);color:var(--txt2);font-size:0.9rem;letter-spacing:1px}
+.divider{height:1px;background:var(--border);margin:16px 0}
+@media(max-width:600px){#main{padding:12px}#app-header{padding:0 12px;gap:8px}.nav-tab{padding:6px 10px;font-size:0.78rem}}
+</style>
+</head>
+<body>
+<div id="loading-overlay"><div class="spinner"></div><div class="loading-text">INITIALIZING MASS SPEC PLATFORM...</div></div>
+<div id="chart-tooltip"><div class="tt-mz"></div><div class="tt-formula"></div><div class="tt-type"></div><div class="tt-abu"></div></div>
+
+<header id="app-header">
+  <a class="logo" href="#">
+    <div class="logo-icon">MS</div>
+    <div><div class="logo-text">MassSpec</div><div class="logo-sub">CAPE CHEMISTRY UNIT 2 · MODULE 2</div></div>
+  </a>
+  <nav id="nav-tabs">
+    <button class="nav-tab active" data-tab="notes">📖 Notes</button>
+    <button class="nav-tab" data-tab="simulator">📊 Simulator</button>
+    <button class="nav-tab" data-tab="quiz">🎯 Quiz</button>
+    <button class="nav-tab" data-tab="reference">📋 Reference</button>
+  </nav>
+</header>
+
+<main id="main">
+
+<!-- NOTES TAB -->
+<section class="tab-panel active" id="tab-notes">
+  <div class="section-title">Course Notes</div>
+  <div class="section-subtitle">Comprehensive notes covering all CAPE and learning objectives. Click any section to expand.</div>
+  <div id="notes-search-wrap">
+    <input type="search" id="notes-search" placeholder="🔍  Search notes (e.g. base peak, McLafferty, isotope, fragmentation)…" oninput="searchNotes(this.value)">
+    <div class="notes-controls">
+      <button class="btn-sm" onclick="expandAllNotes()">Expand All</button>
+      <button class="btn-sm" onclick="collapseAllNotes()">Collapse All</button>
+    </div>
+  </div>
+  <div id="notes-container"></div>
+</section>
+
+<!-- SIMULATOR TAB -->
+<section class="tab-panel" id="tab-simulator">
+  <div class="section-title">Mass Spectrum Simulator</div>
+  <div class="section-subtitle">Load a compound, click any peak to explore fragmentation, or click a fragment in the list to highlight it on the chart.</div>
+  <div id="spectrum-layout">
+    <aside id="compound-panel">
+      <div class="compound-panel-inner">
+        <div>
+          <div style="font-size:0.75rem;color:var(--txt2);font-family:var(--font-mono);margin-bottom:6px">FILTER BY SERIES</div>
+          <select id="series-filter" onchange="filterCompounds()"><option value="">All Series</option></select>
+        </div>
+        <input type="search" id="compound-search-input" placeholder="Search compounds…" oninput="filterCompounds()">
+        <div id="compound-list"></div>
+        <div class="card" style="padding:14px" id="compound-info">
+          <div class="pi-empty"><div class="pi-icon">⚗️</div><div style="font-size:0.82rem">Select a compound to begin</div></div>
+        </div>
+      </div>
+    </aside>
+    <div id="spectrum-main">
+      <div id="chart-controls">
+        <span class="ctrl-label">SHOW:</span>
+        <button class="toggle-btn on" data-toggle="labels" onclick="toggleChartOpt(this)">Peak Labels</button>
+        <button class="toggle-btn on" data-toggle="mplus1" onclick="toggleChartOpt(this)">M+1/M+2</button>
+        <button class="toggle-btn on" data-toggle="grid" onclick="toggleChartOpt(this)">Grid</button>
+        <button class="toggle-btn" data-toggle="normalize" onclick="toggleChartOpt(this)">Normalize</button>
+      </div>
+      <div id="chart-wrap">
+        <canvas id="spectrum-canvas"></canvas>
+        <div id="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--bar-mol)"></div>Molecular Ion</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--bar-base)"></div>Base Peak</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--bar-frag)"></div>Fragment</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--bar-iso)"></div>Isotope</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--bar-m1)"></div>M+1</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--bar-m2)"></div>M+2</div>
+        </div>
+      </div>
+      <div id="peak-info"><div class="pi-empty"><div class="pi-icon">👆</div><p style="font-size:0.82rem">Click a bar on the spectrum or a row below to see details</p></div></div>
+      <div class="card" style="padding:14px">
+        <div style="font-size:0.78rem;color:var(--txt2);font-family:var(--font-mono);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+          <span>PEAK TABLE — click any row to highlight on chart</span>
+          <span id="compound-mw" style="color:var(--orange)"></span>
+        </div>
+        <div id="fragment-list"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ TAB -->
+<section class="tab-panel" id="tab-quiz">
+  <div id="quiz-layout">
+    <div class="section-title">Knowledge Quiz</div>
+    <div class="section-subtitle" style="margin-bottom:16px">Test your understanding. Skip any question freely and return to it using the map below.</div>
+    <div id="quiz-header">
+      <div class="quiz-progress-wrap">
+        <div class="quiz-progress-label"><span id="q-progress-text">Question 1 of 30</span><span id="q-status-text">0 answered</span></div>
+        <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quiz-progress-fill" style="width:0%"></div></div>
+      </div>
+      <div class="quiz-score-box">Score: <span id="quiz-score-display">0</span> / <span id="quiz-total-display">0</span></div>
+      <button class="btn-sm" onclick="resetQuiz()">↺ Restart</button>
+    </div>
+    <div id="question-map"><div class="qmap-label">QUESTION MAP — click to jump to any question</div></div>
+    <div id="quiz-card">
+      <div id="quiz-question-content"></div>
+    </div>
+    <div id="quiz-results"></div>
+  </div>
+</section>
+
+<!-- REFERENCE TAB -->
+<section class="tab-panel" id="tab-reference">
+  <div class="section-title">Quick Reference</div>
+  <div class="section-subtitle">Diagnostic patterns, common fragments, and key rules for rapid exam revision.</div>
+  <div id="ref-layout"></div>
+</section>
+
+</main>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  NOTES DATA
+// ═══════════════════════════════════════════════════
+const NOTES = [
+  {
+    icon:'🔬', title:'Introduction to Mass Spectrometry',
+    sub:'Overview, history and analytical applications',
+    kw:'introduction background overview analytical technique history uses',
+    html:`
+<span class="obj-badge badge-cape">CAPE 7.1</span>
+<h4>What is Mass Spectrometry?</h4>
+<p>Mass spectrometry (MS) is a powerful analytical technique that measures the <em>mass-to-charge ratio (m/z)</em> of ions. It allows chemists to: identify unknown compounds; determine molecular masses with extraordinary precision; study isotopic composition of elements; and investigate molecular structure through fragmentation patterns.</p>
+<div class="note-tip">Two important real-world uses: (1) testing athletes' urine for banned performance-enhancing drugs; (2) monitoring pollutants in river water and the environment.</div>
+<h4>Key Terms</h4>
+<ul>
+<li><strong>Mass spectrum</strong> — a plot of relative abundance (%) vs. m/z ratio</li>
+<li><strong>m/z ratio</strong> — mass of ion ÷ charge. Since most ions carry charge +1, m/z = mass numerically</li>
+<li><strong>Relative abundance</strong> — amount of each ion as %, with tallest peak (base peak) = 100%</li>
+<li><strong>Base peak</strong> — the tallest peak, 100% — most stable/abundant ion formed</li>
+<li><strong>Molecular ion M⁺•</strong> — molecule after losing exactly one electron; gives the molecular mass</li>
+<li><strong>Fragment ions</strong> — smaller ions formed when the molecular ion breaks apart</li>
+<li><strong>Radical cation</strong> — an ion with both a positive charge and an unpaired electron (M⁺•)</li>
+<li><strong>Ion radical</strong> — another term for the molecular ion M⁺• (radical cation)</li>
+</ul>`
+  },
+  {
+    icon:'⚙️', title:'The Mass Spectrometer: Stages & Block Diagram',
+    sub:'Vaporisation → Ionisation → Acceleration → Deflection → Detection',
+    kw:'mass spectrometer stages block diagram vaporisation ionisation acceleration deflection detection schematic principles',
+    html:`
+<span class="obj-badge badge-cape">CAPE 7.1</span><span class="obj-badge badge-lo">Describe how a mass spectrum is obtained</span>
+<h4>Block Diagram — Five Main Stages</h4>
+<div class="note-formula">SAMPLE → [VAPORISATION] → [IONISATION] → [ACCELERATION] → [DEFLECTION] → [DETECTION & RECORDING]</div>
+<h4>Stage 1: Vaporisation</h4>
+<p>The sample must be in the <strong>gas phase</strong>. Liquids and solids are vaporised by heating under <strong>high vacuum</strong>. The vacuum prevents ions colliding with air molecules.</p>
+<h4>Stage 2: Ionisation — Electron Impact (EI)</h4>
+<p>A beam of <strong>high-energy electrons</strong> (~70 eV) from a <em>heated cathode (filament)</em> collides with gaseous sample molecules. One electron is knocked out from each molecule:</p>
+<div class="note-formula">M(g) + e⁻(high energy) → M⁺•(molecular ion) + 2e⁻</div>
+<p>Result: a <strong>radical cation M⁺•</strong> — positively charged with one unpaired electron. Only positive ions are detected; neutral molecules and negative ions are ignored.</p>
+<h4>Stage 3: Acceleration</h4>
+<p>Positive ions are accelerated by a <strong>negatively charged electric field</strong>. All +1 ions receive the same kinetic energy. Lighter ions travel faster; heavier ions slower.</p>
+<h4>Stage 4: Deflection (Separation)</h4>
+<p>A <strong>magnetic field</strong> curves the ion paths. The key equation is:</p>
+<div class="note-formula">m/z = B²r² / 2V</div>
+<p>B = magnetic field strength, r = radius of curvature, V = accelerating voltage. By gradually increasing B, ions of <strong>increasing m/z reach the detector in sequence</strong>. Lighter ions bend MORE; heavier ions bend LESS.</p>
+<div class="note-highlight"><strong>Double-charged ions:</strong> An ion with charge +2 has m/z = mass/2. For example, ²⁰⁸Pb²⁺ appears at m/z = 104. It is deflected TWICE as much as a singly-charged ion of the same mass.</div>
+<h4>Stage 5: Detection & Recording</h4>
+<p>Ions striking the detector (collector plate) produce a small current proportional to ion abundance. This is amplified and recorded by a computer, which plots the <strong>mass spectrum</strong>.</p>
+<div class="note-tip">EXAM: Draw a block diagram with 5 labeled boxes connected by arrows. Always label: Vaporisation, Ionisation (electron impact), Acceleration, Deflection (magnetic field), Detection & Recording.</div>`
+  },
+  {
+    icon:'⚛️', title:'Isotopes & Relative Atomic Mass from Mass Spectra',
+    sub:'Calculating Ar from isotopic masses and abundances',
+    kw:'isotope atomic mass relative abundance calculation weighted mean spectrum element silicon germanium boron',
+    html:`
+<span class="obj-badge badge-cape">CAPE 7.3a</span><span class="obj-badge badge-lo">Determine relative isotopic masses and abundances</span>
+<h4>Mass Spectra of Elements</h4>
+<p>When a pure element is analysed, each peak corresponds to a different <strong>isotope</strong> at a whole-number m/z value. Peak height ∝ natural abundance of that isotope. The most abundant isotope = tallest peak (base peak = 100%).</p>
+<div class="note-tip"><strong>Exam tip:</strong> In a mass spectrum, peak height gives the relative abundance of each isotope.</div>
+<h4>Calculating Relative Atomic Mass (Aᵣ)</h4>
+<p>Aᵣ is the <strong>weighted mean mass</strong> of all isotopes:</p>
+<div class="note-formula">Step 1: Multiply each isotopic mass × its % abundance<br>Step 2: Add all products<br>Step 3: Divide by 100</div>
+<p><strong>Worked Example — Germanium (Ge):</strong></p>
+<div class="note-formula">Aᵣ = (20.5×70 + 27.4×72 + 7.8×73 + 36.5×74 + 7.8×76) / 100<br>= (1435 + 1972.8 + 569.4 + 2701 + 592.8) / 100 = 7271/100 ≈ 72.6</div>
+<div class="note-warn">⚠️ If abundances given are RELATIVE (not %), add all abundances first to find total, then divide each by total to get % before using the formula.</div>
+<table class="note-table">
+<tr><th>Element</th><th>Isotopes & Abundances</th><th>Pattern</th><th>Aᵣ</th></tr>
+<tr><td>Boron (B)</td><td>¹⁰B (19.8%), ¹¹B (80.2%)</td><td>2 peaks ~1:4 ratio</td><td>10.8</td></tr>
+<tr><td>Silicon (Si)</td><td>²⁸Si (92.2%), ²⁹Si (4.7%), ³⁰Si (3.1%)</td><td>3 peaks</td><td>28.1</td></tr>
+<tr><td>Germanium (Ge)</td><td>⁷⁰,⁷²,⁷³,⁷⁴,⁷⁶Ge (5 isotopes)</td><td>5 peaks</td><td>72.6</td></tr>
+<tr><td>Chlorine (Cl)</td><td>³⁵Cl (75.5%), ³⁷Cl (24.5%)</td><td>2 peaks ~3:1</td><td>35.5</td></tr>
+<tr><td>Bromine (Br)</td><td>⁷⁹Br (50.7%), ⁸¹Br (49.3%)</td><td>2 peaks ~1:1</td><td>79.9</td></tr>
+</table>`
+  },
+  {
+    icon:'💥', title:'The Molecular Ion & Fragmentation',
+    sub:'M⁺•, base peak, fragmentation patterns of organic compounds',
+    kw:'molecular ion fragmentation base peak organic compound alpha cleavage bond breaking radical',
+    html:`
+<span class="obj-badge badge-cape">CAPE 7.3b</span><span class="obj-badge badge-lo">Explain fragmentation; define base peak and molecular ion</span>
+<h4>The Molecular Ion Peak (M⁺•)</h4>
+<p>When a molecule M loses one electron in the mass spectrometer: <code>M → M⁺• + e⁻</code></p>
+<p>The resulting <strong>molecular ion M⁺•</strong> appears at m/z = relative molecular mass (Mᵣ). It is always a <em>radical cation</em> (has charge + and an unpaired electron). In many compounds the M⁺• peak is weak because the molecule quickly fragments.</p>
+<div class="note-highlight"><strong>Which compounds have strong M⁺ peaks?</strong> Aromatic compounds (especially benzene), small molecules, and compounds with conjugated systems. <strong>Weak M⁺:</strong> alcohols, branched alkanes, aldehydes, amines.</div>
+<h4>Fragmentation</h4>
+<p>The unstable M⁺• breaks apart to give <strong>fragment ions</strong> (lower m/z) + neutral radicals (not detected):</p>
+<div class="note-formula">M⁺• → [fragment]⁺ + neutral radical•<br>or M⁺• → [fragment]⁺• + neutral molecule</div>
+<p>Rules for fragmentation:</p>
+<ul>
+<li><strong>Bonds break where they are weakest</strong> — typically at branch points, next to heteroatoms (O, N, Cl, Br)</li>
+<li><strong>The more stable the ion, the greater its relative abundance</strong> in the spectrum</li>
+<li>Carbocation stability: <em>tertiary > secondary > primary</em></li>
+<li>Resonance-stabilized ions (acylium, allyl, benzyl, tropylium) are especially abundant</li>
+</ul>
+<h4>α-Cleavage (Most Important Rule)</h4>
+<p>The bond <strong>α (next to)</strong> a heteroatom or functional group C=X preferentially cleaves:</p>
+<div class="note-formula">R—C(=O)—R' → [R—C≡O]⁺ (acylium) + R'•<br>or → R⁺ + •C(=O)—R'</div>
+<p>α-cleavage is the dominant fragmentation in: ketones, aldehydes, esters, acids, alcohols, amines, and halogenoalkanes.</p>
+<h4>Base Peak</h4>
+<p>The <strong>base peak</strong> is the tallest peak, assigned 100% relative abundance. It corresponds to the <strong>most stable ion</strong> formed during fragmentation. All other peaks are expressed as percentages of the base peak.</p>`
+  },
+  {
+    icon:'🔗', title:'Fragmentation of Alkanes',
+    sub:'Systematic C–C bond cleavage, Δm/z=14 pattern',
+    kw:'alkane fragmentation straight chain branched isomer methyl ethyl propyl butyl carbocation delta m/z 14',
+    html:`
+<span class="obj-badge badge-lo">Identify simple organic molecules from fragmentation patterns</span>
+<h4>Straight-Chain Alkanes (CₙH₂ₙ₊₂)</h4>
+<p>Alkanes have only σ bonds. The molecular ion has <strong>low to moderate abundance</strong> — σ bonds break easily. Characteristic features:</p>
+<ul>
+<li>Series of peaks separated by <strong>Δm/z = 14</strong> (one CH₂ group each time)</li>
+<li>The base peak is usually <em>CₙH₂ₙ₊₁⁺</em> in the middle of the chain</li>
+<li>Peaks at m/z 15 (CH₃⁺), 29 (C₂H₅⁺), 43 (C₃H₇⁺), 57 (C₄H₉⁺) etc.</li>
+</ul>
+<h4>Branched Alkanes vs Straight-Chain Isomers</h4>
+<p>Branching changes the fragmentation pattern significantly even though M⁺ is the same:</p>
+<ul>
+<li><strong>Branched alkanes:</strong> cleavage preferentially occurs at the <em>branch point</em>, giving more stable secondary/tertiary carbocations → stronger peaks at those positions</li>
+<li><strong>Example:</strong> n-pentane vs 2-methylbutane — both have M⁺ = 72, but 2-methylbutane has a much stronger m/z 57 peak (secondary butyl cation from branch-point cleavage)</li>
+</ul>
+<table class="note-table">
+<tr><th>m/z</th><th>Ion</th><th>Formula check</th></tr>
+<tr><td>15</td><td>CH₃⁺ (methyl)</td><td>12+3=15 ✓</td></tr>
+<tr><td>29</td><td>C₂H₅⁺ (ethyl)</td><td>24+5=29 ✓</td></tr>
+<tr><td>43</td><td>C₃H₇⁺ (propyl)</td><td>36+7=43 ✓</td></tr>
+<tr><td>57</td><td>C₄H₉⁺ (butyl)</td><td>48+9=57 ✓</td></tr>
+<tr><td>71</td><td>C₅H₁₁⁺ (pentyl)</td><td>60+11=71 ✓</td></tr>
+</table>
+<div class="note-tip">The <strong>Δm/z = 14</strong> pattern (14 = mass of one CH₂) is the diagnostic fingerprint of alkane fragmentation. Count down from M⁺ in steps of 14 to map the chain.</div>`
+  },
+  {
+    icon:'⚗️', title:'Fragmentation of Alcohols, Aldehydes & Ketones',
+    sub:'α-cleavage, acylium ions, oxocarbenium ions',
+    kw:'alcohol aldehyde ketone carbonyl alpha cleavage acylium oxocarbenium hydroxymethyl CH2OH CHO acetyl propanone ethanal',
+    html:`
+<span class="obj-badge badge-lo">Use mass spectral data to distinguish molecules of similar Mᵣ</span>
+<h4>Alcohols (R—OH)</h4>
+<p>Alcohols have <strong>very weak M⁺</strong> peaks. α-cleavage (C–C bond next to the C–OH) is dominant, forming an oxocarbenium ion:</p>
+<div class="note-formula">R—ĊH—OH → [CH₂=OH]⁺ (m/z 31 for primary) + R•</div>
+<ul>
+<li><strong>Primary alcohols:</strong> base peak m/z 31 [CH₂OH]⁺ — diagnostic!</li>
+<li><strong>Secondary alcohols:</strong> base peak at higher m/z (loss of largest alkyl group), no m/z 31</li>
+<li>Loss of water (M−18) is common → M−H₂O peak</li>
+</ul>
+<h4>Aldehydes (RCHO)</h4>
+<p>α-cleavage gives two types of ions:</p>
+<div class="note-formula">RCHO⁺• → [CHO]⁺ (m/z 29 formyl cation) + R•<br>RCHO⁺• → [RCO]⁺ (acylium cation) + H•</div>
+<ul>
+<li><strong>Formyl cation [CHO]⁺ at m/z 29</strong> is diagnostic for aldehydes</li>
+<li>Also loss of CO (m/z 28) is common from [CHO]⁺</li>
+</ul>
+<h4>Ketones (RCOR')</h4>
+<div class="note-formula">RCOR'⁺• → [RCO]⁺ (acylium) + R'•<br>RCOR'⁺• → [R'CO]⁺ (acylium) + R•</div>
+<ul>
+<li>Two possible α-cleavages; loss of the <strong>larger alkyl group</strong> is usually preferred</li>
+<li>Acylium ion [R—C≡O]⁺ is resonance-stabilized — strong base peak</li>
+<li><strong>Propanone:</strong> base peak m/z 43 [CH₃CO]⁺ + peak at m/z 15 [CH₃]⁺</li>
+<li><strong>Distinguishing propanone vs propanal:</strong> both M⁺ = 58. Propanone has no m/z 29 [CHO]⁺; propanal has strong m/z 29!</li>
+</ul>
+<table class="note-table">
+<tr><th>Compound</th><th>M⁺</th><th>Base Peak</th><th>Diagnostic</th></tr>
+<tr><td>Propanone</td><td>58</td><td>m/z 43 [CH₃CO]⁺</td><td>Strong m/z 43, 15; NO m/z 29 CHO⁺</td></tr>
+<tr><td>Propanal</td><td>58</td><td>m/z 29 [CHO]⁺</td><td>Strong m/z 29 CHO⁺</td></tr>
+<tr><td>Ethanol</td><td>46</td><td>m/z 31 [CH₂OH]⁺</td><td>Weak M⁺, strong 31</td></tr>
+</table>`
+  },
+  {
+    icon:'🧪', title:'Fragmentation of Carboxylic Acids & Esters',
+    sub:'[COOH]⁺ at m/z 45, McLafferty rearrangement',
+    kw:'carboxylic acid ester COOH McLafferty rearrangement m/z 45 methyl ester ethyl ester',
+    html:`
+<span class="obj-badge badge-lo">Fragmentation of carboxylic acids and esters</span>
+<h4>Carboxylic Acids (RCOOH)</h4>
+<p>Carboxylic acids have relatively <strong>strong M⁺</strong> peaks due to resonance stabilization. The key diagnostic peak is:</p>
+<div class="note-formula">[RCOOH]⁺• → [COOH]⁺ at m/z 45 + R•</div>
+<p><strong>m/z 45 [COOH]⁺ is the FINGERPRINT of all carboxylic acids</strong> — present in every member of the homologous series.</p>
+<h4>Esters (RCOOR')</h4>
+<p>Esters fragment by cleavage of the C–OR' bond (α to carbonyl) or the O–C bond:</p>
+<div class="note-formula">[RCOOR']⁺• → [RCO]⁺ + •OR' (acylium route)<br>[RCOOR']⁺• → [OR']⁺ + RCO• (alkoxyl route)</div>
+<ul>
+<li><strong>Methyl esters:</strong> strong M−15 peak (loss of OCH₃); m/z 31 [OCH₃]⁺ present</li>
+<li><strong>Ethyl esters:</strong> base peak m/z 45 [OC₂H₅]⁺ or [CHOH]⁺ after rearrangement</li>
+</ul>
+<h4>The McLafferty Rearrangement</h4>
+<p>When a carbonyl compound has a <strong>γ-hydrogen</strong> (H on the carbon 3 bonds away from C=O), a 6-membered cyclic transition state forms. The result is:</p>
+<div class="note-formula">γ-H migrates to C=O oxygen → β–γ bond breaks → alkene lost + enol cation formed<br>Example: pentan-2-one (M⁺ = 86) → m/z 58 (M−28) + ethene (C₂H₄)</div>
+<div class="note-warn">⚠️ The McLafferty rearrangement requires a γ-hydrogen. Pentan-3-one (no γ-H on the methyl) CANNOT undergo this rearrangement — it is absent from its spectrum. This distinguishes pentan-2-one from pentan-3-one!</div>`
+  },
+  {
+    icon:'🧬', title:'Fragmentation of Amines & Nitrogen Rule',
+    sub:'α-cleavage, iminium ions, odd M⁺ rule',
+    kw:'amine nitrogen rule odd molecular mass iminium alpha cleavage aminomethyl CH2NH2',
+    html:`
+<span class="obj-badge badge-lo">Recognize nitrogen compounds from odd M⁺; identify amine fragments</span>
+<h4>The Nitrogen Rule</h4>
+<p>This is a powerful rule for organic compounds containing C, H, O, N, S, and common halogens:</p>
+<div class="note-highlight"><strong>Nitrogen Rule:</strong> If a compound has an ODD number of nitrogen atoms, its molecular ion will have an ODD m/z value. If it has an EVEN number of nitrogens (0, 2, 4…), M⁺ will be EVEN.</div>
+<p>Examples: ethylamine C₂H₇N → M⁺ = 45 (odd, 1 N) ✓ | methylamine CH₅N → M⁺ = 31 (odd, 1 N) ✓ | pyridine C₅H₅N → M⁺ = 79 (odd, 1 N) ✓</p>
+<h4>Fragmentation of Primary Amines</h4>
+<div class="note-formula">R—CH₂—NH₂⁺• → [CH₂=NH₂]⁺ (m/z 30) + R•</div>
+<ul>
+<li><strong>m/z 30 [CH₂=NH₂]⁺</strong> — diagnostic peak for <strong>all primary aliphatic amines</strong></li>
+<li>α-cleavage gives iminium ion [R'CH=NH₂]⁺ — stabilized by nitrogen lone pair</li>
+<li>Amines generally have <strong>strong M⁺</strong> peaks (N lone pair stabilizes radical cation)</li>
+<li>Strong M−1 peaks from loss of H from α-carbon</li>
+</ul>
+<table class="note-table">
+<tr><th>Amine type</th><th>Key fragment</th><th>m/z range</th></tr>
+<tr><td>Primary (RCH₂NH₂)</td><td>[CH₂=NH₂]⁺</td><td>30 (always)</td></tr>
+<tr><td>Secondary (R₂NH)</td><td>[CH₂=NHR]⁺</td><td>varies</td></tr>
+<tr><td>Tertiary (R₃N)</td><td>[R₂N=CH₂]⁺</td><td>varies</td></tr>
+</table>`
+  },
+  {
+    icon:'🧲', title:'Halogenoalkanes: M+2 Isotope Patterns',
+    sub:'Chlorine 3:1 pattern; Bromine 1:1 pattern; M+4 for two halogens',
+    kw:'halogenoalkane chlorine bromine isotope pattern M+2 M+4 3:1 1:1 35Cl 37Cl 79Br 81Br',
+    html:`
+<span class="obj-badge badge-cape">CAPE 7.2</span><span class="obj-badge badge-lo">Recognize M+2 and M+4 patterns for Cl and Br</span>
+<h4>Chlorine Isotope Pattern (ONE Cl atom)</h4>
+<p>Chlorine has two isotopes: ³⁵Cl (75.5%) and ³⁷Cl (24.5%). A compound with ONE Cl atom shows <strong>two molecular ion peaks</strong> (M and M+2) in approximately <em>3:1 ratio</em>:</p>
+<div class="note-formula">M⁺ : [M+2]⁺ ≈ 3 : 1 (diagnostic for one Cl atom)</div>
+<h4>Bromine Isotope Pattern (ONE Br atom)</h4>
+<p>Bromine has two isotopes: ⁷⁹Br (50.7%) and ⁸¹Br (49.3%) — nearly equal. A compound with ONE Br atom shows <strong>two equal-height molecular ion peaks</strong> (M and M+2) in approximately <em>1:1 ratio</em>:</p>
+<div class="note-formula">M⁺ : [M+2]⁺ ≈ 1 : 1 (diagnostic for one Br atom)</div>
+<h4>Two Halogen Atoms</h4>
+<p>Two Cl atoms → THREE peaks (M, M+2, M+4) in ratio <strong>9:6:1</strong>. Two Br atoms → THREE peaks in ratio <strong>1:2:1</strong>. One Cl + one Br → four peaks at M, M+2, M+2, M+4.</p>
+<div class="note-highlight"><strong>Important: Fragment ions that have LOST the halogen show NO isotope splitting</strong> — only a single peak, since the halogen radical departed.</div>
+<table class="note-table">
+<tr><th>Halogen(s)</th><th>Peaks</th><th>Ratio</th><th>Example</th></tr>
+<tr><td>One Cl</td><td>M, M+2</td><td>3:1</td><td>CH₃Cl (50/52)</td></tr>
+<tr><td>One Br</td><td>M, M+2</td><td>~1:1</td><td>CH₃Br (94/96)</td></tr>
+<tr><td>Two Cl</td><td>M, M+2, M+4</td><td>9:6:1</td><td>CH₂Cl₂</td></tr>
+<tr><td>Two Br</td><td>M, M+2, M+4</td><td>1:2:1</td><td>CH₂Br₂</td></tr>
+<tr><td>Cl₂ molecular</td><td>70, 72, 74</td><td>9:6:1</td><td>Cl₂</td></tr>
+</table>`
+  },
+  {
+    icon:'🔢', title:'The M+1 Peak & Counting Carbon Atoms',
+    sub:'Using ¹³C natural abundance to determine number of carbons',
+    kw:'M+1 peak carbon atoms 13C natural abundance count formula',
+    html:`
+<span class="obj-badge badge-cape">CAPE 7.2</span><span class="obj-badge badge-lo">Explain significance of M+1 peak; deduce number of carbon atoms</span>
+<h4>Why Does the M+1 Peak Exist?</h4>
+<p>In any organic compound, 1.1% of all carbon atoms are ¹³C (not the common ¹²C). Each carbon atom in a molecule has a 1.1% probability of being ¹³C. Therefore:</p>
+<div class="note-formula">Expected M+1 intensity = n × 1.1% (where n = number of carbon atoms)</div>
+<p>The M+1 peak appears exactly 1 mass unit above M⁺.</p>
+<h4>Calculating the Number of Carbon Atoms</h4>
+<div class="note-formula">n = (abundance of M+1 peak / abundance of M⁺ peak) × (100 / 1.1)</div>
+<p><strong>Worked Example:</strong> In the mass spectrum of benzene, the M⁺ peak (m/z 78) has 100% abundance and the M+1 peak (m/z 79) has 6.6% abundance.</p>
+<div class="note-formula">n = (6.6 / 100) × (100/1.1) = 6.6/1.1 = 6 carbon atoms ✓</div>
+<div class="note-tip">This formula works well for small to medium-sized molecules. For large molecules, contributions from ¹⁸O, ²H, ¹⁵N also contribute to the M+1 peak. For CAPE/A-level, only the ¹³C contribution is considered.</div>
+<div class="note-highlight"><strong>EXAM TIP:</strong> If given the M+1 abundance as a % of M⁺, simply divide by 1.1 to get the number of carbon atoms. Example: M+1 = 4.4% → 4.4/1.1 = 4 carbons.</div>`
+  },
+  {
+    icon:'🔭', title:'High-Resolution Mass Spectrometry',
+    sub:'Distinguishing molecules of similar Mᵣ; exact masses',
+    kw:'high resolution mass spectrometry exact mass molecular formula distinguish SO2 S2 similar molecular mass',
+    html:`
+<span class="obj-badge badge-cape">CAPE 7.3b</span><span class="obj-badge badge-lo">Describe how high-resolution MS distinguishes molecules of similar Mᵣ</span>
+<h4>The Problem with Low-Resolution MS</h4>
+<p>Many different molecules can have the <strong>same nominal (integer) molecular mass</strong>. For example: SO₂ and S₂ both have Mᵣ ≈ 64. At low resolution, they cannot be distinguished!</p>
+<h4>How High-Resolution MS Works</h4>
+<p>Double-focusing mass spectrometers use a combination of magnetic and electrostatic fields to measure masses with <strong>5+ decimal place accuracy</strong>. The key principle: only ¹²C has a <em>truly exact integer mass</em> (12.0000 by definition). All other atoms have non-integer exact masses:</p>
+<div class="note-formula">¹H = 1.00783 | ¹⁶O = 15.9949 | ¹⁴N = 14.0031 | ³²S = 31.9721</div>
+<p><strong>Example:</strong> Both SO₂ and S₂ have nominal mass 64:</p>
+<div class="note-formula">SO₂: ³²S + 2×¹⁶O = 31.9721 + 2(15.9949) = 63.9619<br>S₂: 2×³²S = 2(31.9721) = 63.9442</div>
+<p>High-resolution MS easily distinguishes these at m/z 63.9619 vs 63.9442.</p>
+<h4>Determining Molecular Formulae</h4>
+<p>Any peak at a given nominal mass can correspond to several possible formulae (e.g. m/z 86 could be C₆H₁₄, C₅H₁₀O, C₃H₆N₂O, or C₄H₆O₂). High-resolution MS identifies the exact formula from the precise mass.</p>
+<div class="note-tip">Use of high-resolution MS is sometimes called "exact mass measurement." The technique is used in pharmaceutical research to confirm the molecular formula of newly synthesised drug candidates.</div>`
+  },
+  {
+    icon:'🌸', title:'Aromatic Compounds in Mass Spectrometry',
+    sub:'Tropylium cation, phenyl cation, benzyl fragmentation',
+    kw:'aromatic benzene toluene tropylium benzyl phenyl methylbenzene alkylbenzene naphthalene',
+    html:`
+<span class="obj-badge badge-lo">Identify aromatic compound fragmentation patterns</span>
+<h4>Benzene — Molecular Ion = Base Peak</h4>
+<p>Benzene has an <strong>exceptionally stable molecular ion</strong> due to the 6π aromatic system. The M⁺ at m/z 78 is the BASE PEAK — very little fragmentation. This is diagnostic: if the largest peak is also the molecular ion, suspect an aromatic compound.</p>
+<div class="note-formula">Benzene M⁺ at m/z 78 (base peak) → phenyl cation [C₆H₅]⁺ at m/z 77 (M−1)</div>
+<h4>Alkylbenzenes — The Tropylium Cation</h4>
+<p>All alkylbenzenes show a <strong>strong base peak at m/z 91</strong> — the tropylium cation [C₇H₇]⁺:</p>
+<div class="note-formula">[Ar−CH₂−R]⁺• → [C₇H₇]⁺ (tropylium) + R•</div>
+<p>The <strong>tropylium cation</strong> is the cycloheptatrienyl cation — a <em>cyclic, planar, 6π-electron aromatic cation</em>. Its aromatic character makes it exceptionally stable, so m/z 91 dominates the spectra of all compounds with a benzyl group (ArCH₂−).</p>
+<div class="note-highlight">The pattern <strong>strong M⁺ + strong m/z 91</strong> is the fingerprint of methylbenzene (toluene) and all other alkylbenzenes. Loss of C₂H₂ from tropylium gives cyclopentadienyl cation [C₅H₅]⁺ at m/z 65.</div>
+<table class="note-table">
+<tr><th>Compound</th><th>M⁺ (m/z)</th><th>Base peak</th><th>Key other peaks</th></tr>
+<tr><td>Benzene</td><td>78</td><td>78 (M⁺ itself)</td><td>77, 51, 50</td></tr>
+<tr><td>Methylbenzene</td><td>92</td><td>91 (tropylium)</td><td>65, 51, 39</td></tr>
+<tr><td>Ethylbenzene</td><td>106</td><td>91 (tropylium)</td><td>77, 65, 51</td></tr>
+</table>`
+  },
+  {
+    icon:'📐', title:'Interpreting Mass Spectra — Step-by-Step Method',
+    sub:'Systematic approach for exams and practical analysis',
+    kw:'interpret mass spectrum step by step method exam technique strategy',
+    html:`
+<span class="obj-badge badge-cape">CAPE 7.3</span><span class="obj-badge badge-lo">Systematic approach to mass spectrum interpretation</span>
+<h4>Step-by-Step Approach</h4>
+<ol>
+<li><strong>Find M⁺ (molecular ion):</strong> The highest-m/z significant peak (ignore the tiny M+1 peak). This gives the molecular mass.</li>
+<li><strong>Apply the Nitrogen Rule:</strong> Odd M⁺ → odd number of N atoms. Even M⁺ → even number (0, 2, 4…) of N atoms.</li>
+<li><strong>Look for isotope patterns:</strong> M and M+2 in ~3:1 ratio → one Cl. ~1:1 ratio → one Br. Three peaks (M, M+2, M+4) → two halogens.</li>
+<li><strong>Find the base peak</strong> and identify the ion: m/z 43 [CH₃CO]⁺ suggests a methyl ketone or ester; m/z 45 [COOH]⁺ suggests a carboxylic acid; m/z 31 [CH₂OH]⁺ suggests a primary alcohol.</li>
+<li><strong>Look for significant losses:</strong> M−15 = loss of CH₃; M−17 = loss of OH; M−18 = loss of H₂O; M−29 = loss of CHO or C₂H₅; M−45 = loss of OC₂H₅; M−43 = loss of CH₃CO.</li>
+<li><strong>Calculate M+1 peak intensity</strong> to estimate number of carbons: n ≈ (M+1/M⁺) × (100/1.1)</li>
+<li><strong>Cross-check</strong> with the molecular formula and degree of unsaturation if known.</li>
+</ol>
+<h4>Common Diagnostic Peaks Summary</h4>
+<table class="note-table">
+<tr><th>m/z</th><th>Ion</th><th>Indicates</th></tr>
+<tr><td>15</td><td>[CH₃]⁺</td><td>Methyl group present</td></tr>
+<tr><td>29</td><td>[CHO]⁺ or [C₂H₅]⁺</td><td>Aldehyde (CHO⁺) or ethyl group</td></tr>
+<tr><td>30</td><td>[CH₂=NH₂]⁺</td><td>Primary amine</td></tr>
+<tr><td>31</td><td>[CH₂OH]⁺</td><td>Primary alcohol</td></tr>
+<tr><td>43</td><td>[CH₃CO]⁺</td><td>Methyl ketone/ester (COCH₃ group)</td></tr>
+<tr><td>45</td><td>[COOH]⁺</td><td>Carboxylic acid</td></tr>
+<tr><td>77</td><td>[C₆H₅]⁺</td><td>Phenyl group (benzene ring)</td></tr>
+<tr><td>91</td><td>[C₇H₇]⁺</td><td>Tropylium → benzyl/tolyl group</td></tr>
+</table>`
+  }
+];
+
+// ═══════════════════════════════════════════════════
+//  RENDER NOTES
+// ═══════════════════════════════════════════════════
+function renderNotes(){
+  const c = document.getElementById('notes-container');
+  c.innerHTML = NOTES.map((n,i)=>`
+<div class="collapsible" data-keywords="${n.kw}" data-index="${i}">
+  <button class="collapsible-header" onclick="toggleCollapsible(this)">
+    <div class="collapsible-icon">${n.icon}</div>
+    <div>
+      <div>${n.title}</div>
+      <div style="font-size:0.75rem;color:var(--txt2);font-weight:400;margin-top:2px">${n.sub}</div>
+    </div>
+    <span class="collapsible-arrow">▼</span>
+  </button>
+  <div class="collapsible-body"><div class="collapsible-content">${n.html}</div></div>
+</div>`).join('');
+}
+
+function toggleCollapsible(btn){
+  const c = btn.closest('.collapsible');
+  c.classList.toggle('open');
+}
+function expandAllNotes(){document.querySelectorAll('.collapsible').forEach(c=>c.classList.add('open'))}
+function collapseAllNotes(){document.querySelectorAll('.collapsible').forEach(c=>c.classList.remove('open'))}
+function searchNotes(q){
+  const v = q.toLowerCase().trim();
+  document.querySelectorAll('.collapsible').forEach(c=>{
+    const kw = c.dataset.keywords||'';
+    const title = c.querySelector('.collapsible-header').textContent.toLowerCase();
+    const content = c.querySelector('.collapsible-content')?c.querySelector('.collapsible-content').textContent.toLowerCase():'';
+    const match = !v || kw.includes(v)||title.includes(v)||content.includes(v);
+    c.style.display = match?'':'none';
+    if(match && v) c.classList.add('open');
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  SIMULATOR
+// ═══════════════════════════════════════════════════
+let compounds = [];
+let currentCompound = null;
+let selectedPeakIdx = -1;
+let chartOpts = {labels:true, mplus1:true, grid:true, normalize:false};
+const BAR_COLORS = {
+  molecular:'#12e8ff', base:'#ff8533', fragment:'#4488cc',
+  isotope:'#a855f7', mplus1:'#33ff99', mplus2:'#ff9944'
+};
+
+async function loadCompounds(){
+  try{
+    const r = await fetch('compounds.json');
+    const data = await r.json();
+    compounds = data.compounds;
+    populateSeriesFilter();
+    renderCompoundList(compounds);
+  } catch(e){
+    console.warn('Could not load compounds.json, using empty dataset',e);
+    compounds = [];
+  }
+}
+
+function populateSeriesFilter(){
+  const series = [...new Set(compounds.map(c=>c.series))].sort();
+  const sel = document.getElementById('series-filter');
+  series.forEach(s=>{
+    const o = document.createElement('option');
+    o.value=s; o.textContent=s;
+    sel.appendChild(o);
+  });
+}
+
+function filterCompounds(){
+  const series = document.getElementById('series-filter').value;
+  const q = document.getElementById('compound-search-input').value.toLowerCase();
+  const filtered = compounds.filter(c=>{
+    const seriesMatch = !series || c.series===series;
+    const qMatch = !q || c.name.toLowerCase().includes(q)||c.formula.toLowerCase().includes(q)||c.series.toLowerCase().includes(q);
+    return seriesMatch && qMatch;
+  });
+  renderCompoundList(filtered);
+}
+
+function renderCompoundList(list){
+  const el = document.getElementById('compound-list');
+  if(!list.length){el.innerHTML='<div style="padding:16px;color:var(--txt3);font-size:0.82rem;text-align:center">No compounds found</div>';return;}
+  el.innerHTML = list.map(c=>`
+<div class="compound-item ${currentCompound&&currentCompound.id===c.id?'selected':''}" onclick="selectCompound('${c.id}')">
+  <div>
+    <div class="compound-item-name">${c.name}</div>
+    <div class="compound-item-formula">${c.formula}</div>
+  </div>
+  <div class="compound-item-mass">M=${c.molecularMass}</div>
+</div>`).join('');
+}
+
+function selectCompound(id){
+  currentCompound = compounds.find(c=>c.id===id);
+  if(!currentCompound)return;
+  selectedPeakIdx = -1;
+  filterCompounds();
+  renderCompoundInfo();
+  renderSpectrum();
+  renderFragmentList();
+  renderPeakInfo(null);
+  document.getElementById('compound-mw').textContent = `Mᵣ = ${currentCompound.molecularMass}`;
+}
+
+function renderCompoundInfo(){
+  const c = currentCompound;
+  const tags = c.keyFeatures.map(f=>`<span class="key-feature-tag">${f}</span>`).join('');
+  document.getElementById('compound-info').innerHTML = `
+<strong>${c.name}</strong>
+<div class="info-formula">${c.formula}</div>
+<span class="info-series">${c.series}</span>
+<div style="font-size:0.82rem;color:var(--txt2);margin:8px 0;line-height:1.6">${c.description}</div>
+<div style="margin-top:8px">${tags}</div>`;
+}
+
+// ──── CANVAS CHART ────
+let hitBoxes = [];
+function renderSpectrum(){
+  if(!currentCompound)return;
+  const canvas = document.getElementById('spectrum-canvas');
+  const wrap = document.getElementById('chart-wrap');
+  const dpr = window.devicePixelRatio||1;
+  const W = wrap.clientWidth - 32;
+  const H = Math.max(340, Math.round(W*0.42));
+  canvas.width = W*dpr; canvas.height = H*dpr;
+  canvas.style.width = W+'px'; canvas.style.height = H+'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+
+  const PAD = {top:24,right:20,bottom:48,left:52};
+  const cw = W - PAD.left - PAD.right;
+  const ch = H - PAD.top - PAD.bottom;
+
+  const peaks = currentCompound.peaks.filter(p=>!(!chartOpts.mplus1 && (p.ionType==='mplus1'||p.ionType==='mplus2')));
+  if(!peaks.length)return;
+
+  const maxMZ = Math.max(...peaks.map(p=>p.mz))*1.08;
+  const minMZ = Math.max(0, Math.min(...peaks.map(p=>p.mz))*0.88);
+  const mzRange = maxMZ - minMZ;
+  const maxAbu = chartOpts.normalize ? Math.max(...peaks.map(p=>p.relativeAbundance)) : 100;
+
+  // grid
+  ctx.clearRect(0,0,W,H);
+  if(chartOpts.grid){
+    ctx.strokeStyle='rgba(26,45,80,0.8)';
+    ctx.lineWidth=0.7;
+    [0,20,40,60,80,100].forEach(y=>{
+      const yp = PAD.top + ch*(1-y/maxAbu);
+      ctx.beginPath();ctx.moveTo(PAD.left,yp);ctx.lineTo(PAD.left+cw,yp);ctx.stroke();
+    });
+  }
+
+  // axes
+  ctx.strokeStyle='#243d6a';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(PAD.left,PAD.top);ctx.lineTo(PAD.left,PAD.top+ch);ctx.lineTo(PAD.left+cw,PAD.top+ch);ctx.stroke();
+
+  // y-axis labels
+  ctx.fillStyle='#7a9ab8';ctx.font=`11px 'Share Tech Mono',monospace`;ctx.textAlign='right';
+  [0,25,50,75,100].forEach(y=>{
+    const yp = PAD.top+ch*(1-y/maxAbu);
+    ctx.fillText(y+'%',PAD.left-6,yp+4);
+  });
+
+  // axis titles
+  ctx.save();ctx.translate(13,PAD.top+ch/2);ctx.rotate(-Math.PI/2);
+  ctx.fillStyle='#7a9ab8';ctx.font=`11px 'Share Tech Mono',monospace`;ctx.textAlign='center';
+  ctx.fillText('Relative Abundance (%)',0,0);ctx.restore();
+  ctx.fillStyle='#7a9ab8';ctx.font=`11px 'Share Tech Mono',monospace`;ctx.textAlign='center';
+  ctx.fillText('m/z (mass/charge ratio)',PAD.left+cw/2,H-6);
+
+  // x-axis ticks
+  const mzStep = mzRange>200?50:mzRange>80?20:mzRange>40?10:5;
+  const mzStart = Math.ceil(minMZ/mzStep)*mzStep;
+  ctx.fillStyle='#7a9ab8';ctx.font=`10px 'Share Tech Mono',monospace`;ctx.textAlign='center';
+  for(let mz=mzStart;mz<=maxMZ;mz+=mzStep){
+    const x = PAD.left + (mz-minMZ)/mzRange*cw;
+    ctx.fillText(mz,x,PAD.top+ch+16);
+    ctx.strokeStyle='rgba(26,45,80,0.5)';ctx.lineWidth=0.5;
+    ctx.beginPath();ctx.moveTo(x,PAD.top+ch);ctx.lineTo(x,PAD.top+ch+4);ctx.stroke();
+  }
+
+  hitBoxes = [];
+  const barW = Math.max(3, Math.min(14, cw/peaks.length*0.55));
+
+  peaks.forEach((p,i)=>{
+    const x = PAD.left + (p.mz-minMZ)/mzRange*cw;
+    const yTop = PAD.top + ch*(1 - p.relativeAbundance/maxAbu);
+    const yBot = PAD.top + ch;
+    const barH = yBot-yTop;
+    const isSelected = selectedPeakIdx===i;
+    const color = BAR_COLORS[p.ionType]||'#4488cc';
+
+    // glow for selected
+    if(isSelected){
+      ctx.shadowColor=color;ctx.shadowBlur=18;
+    }
+
+    // bar gradient
+    const grad = ctx.createLinearGradient(0,yTop,0,yBot);
+    grad.addColorStop(0,color);grad.addColorStop(1,color+'44');
+    ctx.fillStyle = isSelected ? color : grad;
+    ctx.globalAlpha = isSelected ? 1 : 0.85;
+    ctx.fillRect(x-barW/2, yTop, barW, barH);
+    ctx.shadowBlur=0; ctx.globalAlpha=1;
+
+    // top cap
+    ctx.fillStyle=color;
+    ctx.fillRect(x-barW/2,yTop,barW,3);
+
+    // label
+    if(chartOpts.labels && (p.relativeAbundance>8||isSelected)){
+      ctx.fillStyle= isSelected?'#ffffff':color;
+      ctx.font=`bold ${isSelected?12:10}px 'Share Tech Mono',monospace`;
+      ctx.textAlign='center';
+      ctx.fillText(p.mz, x, yTop-6);
+    }
+
+    hitBoxes.push({x,yTop,yBot,barW,peak:p,peakIdx:i});
+  });
+}
+
+// chart interaction
+document.getElementById('spectrum-canvas').addEventListener('mousemove',function(e){
+  const rect = this.getBoundingClientRect();
+  const mx = e.clientX-rect.left;
+  const my = e.clientY-rect.top;
+  const tt = document.getElementById('chart-tooltip');
+  let hit = null;
+  for(const hb of hitBoxes){
+    if(mx>=hb.x-hb.barW-4&&mx<=hb.x+hb.barW+4&&my>=hb.yTop-4&&my<=hb.yBot+4){hit=hb;break;}
+  }
+  if(hit){
+    const p=hit.peak;
+    tt.querySelector('.tt-mz').textContent='m/z = '+p.mz;
+    tt.querySelector('.tt-formula').textContent=p.ionFormula;
+    tt.querySelector('.tt-type').textContent=p.ionType.replace(/([A-Z])/g,' $1').toUpperCase();
+    tt.querySelector('.tt-abu').textContent='Abundance: '+p.relativeAbundance+'%';
+    tt.className='show';
+    tt.style.left=(e.clientX+14)+'px'; tt.style.top=(e.clientY-40)+'px';
+    this.style.cursor='pointer';
+  } else {
+    tt.className='';this.style.cursor='crosshair';
+  }
+});
+document.getElementById('spectrum-canvas').addEventListener('mouseleave',()=>{
+  document.getElementById('chart-tooltip').className='';
+});
+document.getElementById('spectrum-canvas').addEventListener('click',function(e){
+  const rect=this.getBoundingClientRect();
+  const mx=e.clientX-rect.left;
+  const my=e.clientY-rect.top;
+  for(const hb of hitBoxes){
+    if(mx>=hb.x-hb.barW-5&&mx<=hb.x+hb.barW+5&&my>=hb.yTop-5&&my<=hb.yBot+5){
+      selectPeak(hb.peakIdx);return;
+    }
+  }
+});
+
+function selectPeak(idx){
+  if(!currentCompound)return;
+  selectedPeakIdx = idx;
+  const peaks = currentCompound.peaks;
+  renderSpectrum();
+  renderFragmentList();
+  renderPeakInfo(peaks[idx]);
+}
+
+function renderPeakInfo(peak){
+  const el = document.getElementById('peak-info');
+  if(!peak){
+    el.innerHTML='<div class="pi-empty"><div class="pi-icon">👆</div><p style="font-size:0.82rem">Click a bar on the spectrum or a row in the table</p></div>';
+    el.classList.remove('active');return;
+  }
+  el.classList.add('active');
+  const color = BAR_COLORS[peak.ionType]||'#4488cc';
+  const typeLabel = {'molecular':'MOLECULAR ION','base':'BASE PEAK','fragment':'FRAGMENT ION','isotope':'ISOTOPE PEAK','mplus1':'M+1 PEAK','mplus2':'M+2 PEAK'}[peak.ionType]||peak.ionType.toUpperCase();
+  el.innerHTML=`
+<div class="pi-header">
+  <div class="pi-mz-badge" style="border-color:${color}">
+    <div class="pi-mz-val" style="color:${color}">${peak.mz}</div>
+    <div class="pi-mz-label">m/z</div>
+  </div>
+  <div class="pi-meta">
+    <div class="pi-formula" style="color:${color}">${peak.ionFormula}</div>
+    <span class="pi-type-badge" style="background:${color}22;border:1px solid ${color}55;color:${color}">${typeLabel}</span>
+  </div>
+</div>
+<div class="pi-label">${peak.fragmentLabel}</div>
+<div class="pi-abundance">
+  <div class="pi-abundance-bar"><div class="pi-abundance-fill" style="width:${peak.relativeAbundance}%;background:${color}"></div></div>
+  <div class="pi-abundance-val" style="color:${color}">${peak.relativeAbundance}%</div>
+</div>
+<div class="pi-explanation">${peak.explanation}</div>`;
+}
+
+function renderFragmentList(){
+  const el = document.getElementById('fragment-list');
+  if(!currentCompound){el.innerHTML='';return;}
+  const peaks=[...currentCompound.peaks].sort((a,b)=>b.mz-a.mz);
+  el.innerHTML = peaks.map((p,rawI)=>{
+    const realIdx = currentCompound.peaks.indexOf(p);
+    const color = BAR_COLORS[p.ionType]||'#4488cc';
+    const isSelected = selectedPeakIdx===realIdx;
+    const barW = Math.round(p.relativeAbundance*0.6);
+    return `<div class="frag-item ${isSelected?'selected':''}" onclick="selectPeak(${realIdx})">
+<div class="frag-mz" style="color:${color}">${p.mz}</div>
+<div class="frag-details">
+  <div class="frag-formula" style="color:${color}">${p.ionFormula}</div>
+  <div class="frag-label">${p.label}</div>
+</div>
+<div class="frag-bar-wrap">
+  <div class="frag-bar" style="width:${barW}px;background:${color}66;border:1px solid ${color}44"></div>
+  <div class="frag-abu">${p.relativeAbundance}%</div>
+</div>
+</div>`;
+  }).join('');
+}
+
+function toggleChartOpt(btn){
+  const key = btn.dataset.toggle;
+  chartOpts[key] = !chartOpts[key];
+  btn.classList.toggle('on', chartOpts[key]);
+  renderSpectrum();
+}
+
+window.addEventListener('resize', ()=>{if(currentCompound)renderSpectrum();});
+
+// ═══════════════════════════════════════════════════
+//  QUIZ ENGINE
+// ═══════════════════════════════════════════════════
+const QUIZ_QUESTIONS = [
+  {type:'mc',q:'In a mass spectrometer, what is the purpose of the ionisation stage?',sub:'Select the correct answer.',opts:['To vaporise the sample','To knock one or more electrons from sample molecules creating positive ions','To separate ions according to their m/z ratio','To record the signal from the ions'],correct:1,explain:'The ionisation stage uses high-energy electrons (from a heated cathode) to knock one electron from each gaseous molecule, creating a positively charged radical cation M⁺•.'},
+  {type:'mc',q:'What does the BASE PEAK in a mass spectrum represent?',sub:'',opts:['The molecular ion peak','The most abundant fragment — the tallest peak, assigned 100%','The peak due to the most common isotope','The M+1 peak from ¹³C'],correct:1,explain:'The base peak is the tallest peak in the mass spectrum, assigned a relative abundance of 100%. It corresponds to the most stable (most abundant) ion formed during fragmentation.'},
+  {type:'mc',q:'The molecular ion of ethylamine (C₂H₇N) appears at m/z = 45. What does the ODD value of m/z tell you?',sub:'Apply the Nitrogen Rule.',opts:['The compound contains an even number of oxygen atoms','The compound contains an ODD number of nitrogen atoms','The compound is an alkane','The molecular ion is doubly charged'],correct:1,explain:'The Nitrogen Rule states: a compound with an ODD number of nitrogen atoms has an ODD molecular mass. m/z = 45 (odd) → one nitrogen atom. This is the Nitrogen Rule.'},
+  {type:'mc',q:'Which peak is the DIAGNOSTIC fingerprint of all carboxylic acids in mass spectrometry?',sub:'',opts:['m/z 43 [CH₃CO]⁺','m/z 45 [COOH]⁺','m/z 31 [CH₂OH]⁺','m/z 29 [CHO]⁺'],correct:1,explain:'The carboxyl cation [COOH]⁺ at m/z = 45 is formed by α-cleavage from all carboxylic acids. It is present in the spectrum of every member of the carboxylic acid homologous series.'},
+  {type:'mc',q:'Propanone (CH₃COCH₃) and propanal (C₂H₅CHO) both have M⁺ = 58. Which statement best distinguishes them by MS?',sub:'',opts:['Propanone has a strong m/z 29 [CHO]⁺; propanal does not','Propanal has a strong m/z 29 [CHO]⁺; propanone does not','Both have identical mass spectra since Mᵣ is the same','Propanone has no molecular ion peak; propanal does'],correct:1,explain:'Propanal shows a strong m/z 29 [CHO]⁺ base peak (diagnostic for aldehydes). Propanone has NO m/z 29 [CHO]⁺ peak — its base peak is m/z 43 [CH₃CO]⁺. This completely distinguishes the two isomers.'},
+  {type:'mc',q:'A compound shows molecular ion peaks at m/z 78 and m/z 80 in approximately 3:1 ratio. What does this indicate?',sub:'',opts:['The compound contains one bromine atom','The compound contains one chlorine atom','The compound contains two chlorine atoms','The m/z 80 peak is a M+2 due to ¹³C'],correct:1,explain:'A 3:1 M:M+2 ratio is the diagnostic pattern for ONE chlorine atom. ³⁵Cl (75.5%) and ³⁷Cl (24.5%) give molecular ions 2 mass units apart in approximately 3:1 ratio.'},
+  {type:'mc',q:'In the mass spectrum of benzene (C₆H₆, M = 78), the M+1 peak at m/z 79 has an abundance of 6.6% relative to M⁺. How many carbon atoms does this confirm?',sub:'Use: n = (M+1 abundance ÷ 1.1)',opts:['5 carbons','6 carbons','7 carbons','8 carbons'],correct:1,explain:'n = (6.6/100) × (100/1.1) = 6.6/1.1 = 6 carbon atoms. Each carbon atom contributes 1.1% to the M+1 peak due to the natural abundance of ¹³C (1.1%).'},
+  {type:'mc',q:'Which of the following ions is the TROPYLIUM CATION, the diagnostic base peak of alkylbenzenes?',sub:'',opts:['[C₆H₅]⁺ at m/z 77','[C₇H₇]⁺ at m/z 91 (aromatic cycloheptatrienyl cation)','[CH₃CO]⁺ at m/z 43','[C₃H₇]⁺ at m/z 43'],correct:1,explain:'The tropylium cation [C₇H₇]⁺ at m/z 91 is the cycloheptatrienyl cation. It is formed from alkylbenzenes by loss of a substituent, and is exceptionally stable due to its 6π aromatic character. It is the base peak in the spectra of toluene and all other benzyl-containing compounds.'},
+  {type:'mc',q:'A primary alcohol R-CH₂OH shows a base peak at m/z 31. What ion causes this peak?',sub:'',opts:['[COOH]⁺','[CH₂OH]⁺ — hydroxymethyl cation (α-cleavage)','[CHO]⁺ — formyl cation','[CH₃]⁺ — methyl cation'],correct:1,explain:'α-cleavage of the C–C bond adjacent to the OH group gives the hydroxymethyl cation [CH₂=OH]⁺ at m/z = 31. This is the diagnostic fingerprint of all primary alcohols.'},
+  {type:'mc',q:'The McLafferty rearrangement produces a distinctive peak in the mass spectra of some carbonyl compounds. What structural requirement is ESSENTIAL for this rearrangement?',sub:'',opts:['A C=C double bond in the molecule','A γ-hydrogen (hydrogen on the carbon 3 bonds from C=O)','A Cl or Br substituent','A six-membered ring'],correct:1,explain:'The McLafferty rearrangement requires a γ-hydrogen — a hydrogen atom on the carbon that is γ (three bonds) from the carbonyl oxygen. This allows a 6-membered cyclic transition state to form, enabling a concerted H-transfer and β-γ bond cleavage.'},
+  {type:'mc',q:'What is the m/z value of the molecular ion of propanone (CH₃COCH₃)?',sub:'Calculate: Mᵣ = 3(12) + 6(1) + 16',opts:['56','58','60','44'],correct:1,explain:'Mᵣ of propanone: C₃H₆O = 3(12) + 6(1) + 16 = 36 + 6 + 16 = 58. The molecular ion appears at m/z = 58.'},
+  {type:'mc',q:'A compound with M⁺ = 94 shows M+2 peak at m/z 96 with almost EQUAL intensity (~1:1 ratio). What does this indicate?',sub:'',opts:['The compound contains one chlorine atom','The compound contains one bromine atom','The compound contains two bromine atoms','The M+2 peak is due to ¹³C and ¹⁸O'],correct:1,explain:'A near 1:1 M:M+2 ratio is the diagnostic fingerprint of ONE BROMINE ATOM. ⁷⁹Br (50.7%) and ⁸¹Br (49.3%) have almost equal natural abundances, producing two near-equal molecular ion peaks 2 mass units apart.'},
+  {type:'mc',q:'Which fragmentation process is most important in ketones and explains their dominant base peak?',sub:'',opts:['Retro-Diels-Alder reaction','α-cleavage adjacent to the carbonyl, giving an acylium ion [RCO]⁺','McLafferty rearrangement involving γ-H','Loss of water (M−18)'],correct:1,explain:'α-cleavage is the dominant fragmentation in ketones. The C–C bond adjacent (α) to the C=O breaks to give a resonance-stabilized acylium ion [R–C≡O]⁺ as the base peak, plus a radical from the other fragment.'},
+  {type:'mc',q:'Butane (C₄H₁₀) and 2-methylpropane (C₄H₁₀) are isomers. Both have M⁺ = 58. Which peak distinguishes them?',sub:'',opts:['Both have identical mass spectra','Butane has a peak at m/z 29 (C₂H₅⁺); 2-methylpropane does NOT (no CH₃CH₂ unit)','2-methylpropane has a larger M⁺ peak','Only butane shows a molecular ion'],correct:1,explain:'Butane has a peak at m/z 29 (C₂H₅⁺) from cleavage of the C₂H₅–C₂H₅ bond. 2-Methylpropane has NO m/z 29 peak since it has no C₂H₅ unit. Instead it shows a very strong m/z 43 [(CH₃)₂CH]⁺ from loss of CH₃ at the branch point.'},
+  {type:'fill',q:'In the mass spectrum of pentan-2-one (CH₃COCH₂CH₂CH₃, M = 86), a peak appears at m/z = 58 due to a special rearrangement. This peak results from loss of ______ (formula) and is called the __________ rearrangement.',sub:'Type your answer (e.g. "C2H4, McLafferty")',correct:'C2H4, McLafferty',acceptAlt:['c2h4, mclafferty','ethylene, mclafferty','ch2ch2, mclafferty'],explain:'m/z 58 = M − 28. Loss of C₂H₄ (ethene, mass 28) via the McLafferty rearrangement. A γ-H migrates to the carbonyl O via a 6-membered transition state, and the Cβ–Cγ bond breaks, releasing ethene.'},
+  {type:'mc',q:'In which of the following compounds would you expect the MOLECULAR ION to be the BASE PEAK?',sub:'',opts:['Propan-1-ol (a primary alcohol)','Benzene (an aromatic compound)','2-Methylbutane (a branched alkane)','Propanal (an aldehyde)'],correct:1,explain:'Benzene has an exceptionally stable molecular ion due to its 6π aromatic electron delocalization. The M⁺• radical cation is so stable it barely fragments — the molecular ion IS the base peak at m/z 78.'},
+  {type:'mc',q:'What is the significance of the m/z value of the molecular ion peak in a mass spectrum?',sub:'',opts:['It gives the number of carbon atoms','It gives the relative molecular mass (Mᵣ) of the compound','It gives the number of rings in the molecule','It identifies the functional group present'],correct:1,explain:'The molecular ion M⁺• is formed when the molecule loses exactly one electron. Since the electron mass is negligible, m/z of M⁺• (for singly-charged ions) equals the relative molecular mass Mᵣ of the compound.'},
+  {type:'mc',q:'A compound shows peaks at m/z 15 (CH₃⁺) and m/z 43 ([CH₃CO]⁺). The molecular ion is at m/z 58. What compound is this most likely to be?',sub:'Hint: the base peak is at m/z 43 and M = 58.',opts:['Propanal (CH₃CH₂CHO)','Propanone (CH₃COCH₃)','Propan-1-ol (CH₃CH₂CH₂OH)','Propanoic acid (CH₃CH₂COOH)'],correct:1,explain:'Propanone (CH₃COCH₃): M = 58, base peak m/z 43 [CH₃CO]⁺ from α-cleavage, m/z 15 [CH₃]⁺ as the complementary fragment. Propanal would show m/z 29 [CHO]⁺ as base peak. Propan-1-ol M = 60. Propanoic acid M = 74.'},
+  {type:'mc',q:'What is the main reason why doubly-charged ions (2+) appear at HALF their expected m/z value?',sub:'Remember the definition of the m/z ratio.',opts:['They are deflected less by the magnetic field','The m/z ratio = mass ÷ charge; charge = 2 halves the m/z value','They are lighter than singly-charged ions','Doubly-charged ions travel slower in the instrument'],correct:1,explain:'By definition, m/z = mass/charge. If charge = 2, then m/z = mass/2. So a ²⁰⁸Pb²⁺ ion with mass 208 appears at m/z = 104, not 208. These ions are also deflected MORE than singly-charged ions of the same mass.'},
+  {type:'mc',q:'Which fragment at m/z 30 is diagnostic for PRIMARY ALIPHATIC AMINES?',sub:'',opts:['[CH₂=O]⁺ (formaldehyde cation)','[CH₂=NH₂]⁺ (aminomethyl cation)','[C₂H₆]⁺• (ethane radical cation)','[CH₂Cl]⁺ (chloromethyl cation)'],correct:1,explain:'α-cleavage in primary amines gives the aminomethyl cation [CH₂=NH₂]⁺ at m/z = 12+2+14+2 = 30. This is present in the spectrum of ALL primary aliphatic amines and is a diagnostic fingerprint. m/z 30 = [CH₂=NH₂]⁺.'},
+  {type:'mc',q:'In what order do ions of INCREASING m/z reach the detector in a magnetic sector mass spectrometer?',sub:'Consider how the magnetic field deflects ions.',opts:['Smallest m/z first, largest last (as field B gradually increases)','Largest m/z first, smallest last','All ions reach the detector simultaneously','The order depends on accelerating voltage only'],correct:0,explain:'By gradually INCREASING the magnetic field strength B, heavier ions (larger m/z) are brought successively onto the path to the detector. So lighter ions (smallest m/z) reach the detector first; heavier ions reach it later as B increases.'},
+  {type:'mc',q:'A straight-chain alkane shows peaks at m/z 57, 43, 29, and 15. What do these peaks have in common?',sub:'Look at the differences between the values.',opts:['They are all separated by m/z = 16 (one oxygen atom)','They are all separated by m/z = 14 (one CH₂ unit) — the characteristic alkane ladder','They are all isotope peaks','They correspond to cyclic fragments'],correct:1,explain:'43−29=14; 29−15=14; 57−43=14. Each step of 14 mass units corresponds to loss of one CH₂ group (mass = 12+2 = 14). This Δm/z = 14 ladder pattern is the diagnostic fingerprint of straight-chain alkane fragmentation.'},
+  {type:'mc',q:'High-resolution mass spectrometry can distinguish SO₂ (Mᵣ ≈ 64) from S₂ (Mᵣ ≈ 64). Why is this possible?',sub:'',opts:['They differ by more than 1 mass unit','Only ¹²C has a truly integer mass; all other atoms have non-integer exact masses, giving different precise masses','S₂ is a gas and SO₂ is not','They have different molecular ion abundances'],correct:1,explain:'Only ¹²C is defined as exactly 12.0000 amu. All other atomic masses are non-integer (e.g. ¹⁶O = 15.9949, ³²S = 31.9721). Therefore SO₂ has exact mass 63.9619 and S₂ has exact mass 63.9442 — distinguishable by high-resolution MS.'},
+  {type:'mc',q:'When the M+1 peak in a mass spectrum has a relative abundance of 3.3% compared to the molecular ion (M⁺), approximately how many carbon atoms are in the molecule?',sub:'Use: n = (M+1%) / 1.1',opts:['2 carbons','3 carbons','4 carbons','5 carbons'],correct:1,explain:'n = 3.3 / 1.1 = 3 carbon atoms. Each carbon contributes 1.1% to the M+1 peak intensity (due to the 1.1% natural abundance of ¹³C). So 3 carbons × 1.1% = 3.3%.'},
+  {type:'mc',q:'A compound has peaks at m/z 122 and m/z 124 in near-equal intensity (~1:1 ratio). There is also a base peak at m/z 79. What halogen is present, and what is the base peak ion?',sub:'',opts:['Chlorine; m/z 79 is [C₅H₇]⁺','Bromine; m/z 79 is ⁷⁹Br⁺ atomic bromine cation','Fluorine; m/z 79 is F⁺','Iodine; m/z 79 is I⁺'],correct:1,explain:'A 1:1 M:M+2 ratio is diagnostic for ONE BROMINE ATOM. The molecular ion (with ⁷⁹Br) is at m/z 122, and the ⁸¹Br counterpart is at m/z 124. The base peak at m/z 79 is the atomic ⁷⁹Br⁺ cation, formed by loss of the organic radical.'},
+  {type:'mc',q:'Which sequence correctly lists the five stages of a mass spectrometer in the right order?',sub:'',opts:['Ionisation → Vaporisation → Acceleration → Deflection → Detection','Vaporisation → Ionisation → Acceleration → Deflection → Detection','Acceleration → Ionisation → Vaporisation → Deflection → Detection','Vaporisation → Acceleration → Ionisation → Deflection → Detection'],correct:1,explain:'The correct order is: (1) Vaporisation — sample into gas phase; (2) Ionisation — electrons knock out one electron from molecules, forming M⁺•; (3) Acceleration — electric field accelerates positive ions; (4) Deflection — magnetic field separates ions by m/z; (5) Detection — ions detected and recorded.'},
+  {type:'mc',q:'What makes the acylium ion [R–C≡O]⁺ particularly stable in mass spectrometric fragmentation?',sub:'',opts:['It has a negative charge','Resonance stabilization: the positive charge is delocalized between C and O via [R–C≡O ↔ R⁺=C=O]','It has a filled outer shell like a noble gas','It is a tertiary carbocation'],correct:1,explain:'The acylium (acyl cation) [R–C≡O]⁺ is stabilized by resonance: [R–C≡O]⁺ ↔ [R⁺=C=O]. The positive charge is delocalized between the carbon and oxygen atoms through the triple-bond-like resonance, making this a particularly stable ion and often giving rise to prominent base peaks in carbonyl compounds.'},
+  {type:'mc',q:'In the mass spectrum of 2-chloropropane vs 1-chloropropane (both have M⁺ = 78/80), which observation distinguishes them?',sub:'Think about carbocation stability.',opts:['2-Chloropropane has a stronger m/z 43 peak (secondary carbocation more stable)','1-Chloropropane has a stronger m/z 43 peak','Both show identical fragmentation','2-Chloropropane shows no m/z 43 peak'],correct:0,explain:'In 2-chloropropane, loss of Cl from the secondary carbon directly gives the isopropyl cation (CH₃)₂CH⁺, a SECONDARY carbocation — more stable than the primary propyl cation formed from 1-chloropropane. Hence 2-chloropropane shows a much stronger m/z 43 peak.'},
+  {type:'mc',q:'Why does benzene have a much stronger molecular ion peak compared to a straight-chain alkane of similar mass?',sub:'',opts:['Benzene is a liquid, alkanes are gases','The aromatic 6π electron system delocalizes the positive charge in M⁺•, making it exceptionally stable','Benzene has more hydrogen atoms','Benzene has a higher boiling point'],correct:1,explain:'The molecular ion M⁺• of benzene has its positive charge/radical delocalized over the entire aromatic ring system. This resonance stabilization makes M⁺• extremely resistant to fragmentation. In contrast, alkane M⁺• has localized σ bonds that break easily, giving weak M⁺ peaks.'},
+  {type:'mc',q:'Which of the following statements about the M+2 peak in mass spectra is CORRECT?',sub:'',opts:['The M+2 peak is always due to ¹³C','In a compound with one Cl atom, the M+2 peak is about 1/3 the height of M⁺','The M+2 peak is only seen in aromatic compounds','The M+2 peak has the same m/z as the M+1 peak'],correct:1,explain:'For a compound with ONE chlorine atom: ³⁵Cl (75.5%) and ³⁷Cl (24.5%). The ratio M:M+2 ≈ 75.5:24.5 ≈ 3:1, so M+2 is approximately 1/3 the height of M⁺. This is the diagnostic 3:1 chlorine pattern.'}
+];
+
+let quizState = {
+  answers: {},   // {qIdx: answerValue}
+  results: {},   // {qIdx: true/false}
+  current: 0,
+  skipped: new Set(),
+  submitted: false
+};
+
+function initQuiz(){
+  quizState = {answers:{},results:{},current:0,skipped:new Set(),submitted:false};
+  document.getElementById('quiz-total-display').textContent = QUIZ_QUESTIONS.length;
+  document.getElementById('quiz-results').classList.remove('show');
+  document.getElementById('quiz-card').style.display='flex';
+  renderQuestionMap();
+  renderQuestion(0);
+}
+
+function resetQuiz(){initQuiz();}
+
+function renderQuestionMap(){
+  const map = document.getElementById('question-map');
+  const label = map.querySelector('.qmap-label');
+  map.innerHTML='';
+  map.appendChild(label||Object.assign(document.createElement('div'),{className:'qmap-label',textContent:'QUESTION MAP — click to jump to any question'}));
+  QUIZ_QUESTIONS.forEach((_,i)=>{
+    const btn = document.createElement('button');
+    btn.className='qmap-btn'+(i===quizState.current?' current':'');
+    if(quizState.results[i]===true) btn.classList.add('answered');
+    else if(quizState.results[i]===false) btn.classList.add('wrong');
+    else if(quizState.skipped.has(i)) btn.classList.add('skipped');
+    btn.textContent=i+1;
+    btn.onclick=()=>renderQuestion(i);
+    map.appendChild(btn);
+  });
+}
+
+function renderQuestion(idx){
+  quizState.current=idx;
+  const q=QUIZ_QUESTIONS[idx];
+  const answered = quizState.results.hasOwnProperty(idx);
+  const el=document.getElementById('quiz-question-content');
+  const total=QUIZ_QUESTIONS.length;
+  const answeredCount = Object.keys(quizState.results).length;
+  const score = Object.values(quizState.results).filter(Boolean).length;
+
+  document.getElementById('q-progress-text').textContent=`Question ${idx+1} of ${total}`;
+  document.getElementById('q-status-text').textContent=`${answeredCount} answered`;
+  document.getElementById('quiz-progress-fill').style.width=`${answeredCount/total*100}%`;
+  document.getElementById('quiz-score-display').textContent=score;
+  renderQuestionMap();
+
+  let html=`<div class="quiz-question-number">QUESTION ${idx+1} / ${total} &nbsp;·&nbsp; ${q.type==='mc'?'Multiple Choice':'Short Answer'}`;
+  if(quizState.skipped.has(idx)) html+=` &nbsp;<span style="color:var(--orange);font-size:0.75rem">[SKIPPED]</span>`;
+  html+=`</div><div class="quiz-question-text">${q.q}</div>`;
+  if(q.sub) html+=`<div class="quiz-question-sub">${q.sub}</div>`;
+
+  if(q.type==='mc'){
+    html+=`<div class="quiz-options">`;
+    q.opts.forEach((o,oi)=>{
+      let cls='quiz-option';
+      if(answered){
+        cls+=' disabled';
+        if(oi===q.correct) cls+=' correct';
+        else if(quizState.answers[idx]===oi && oi!==q.correct) cls+=' wrong';
+      } else if(quizState.answers[idx]===oi) cls+=' selected';
+      html+=`<button class="${cls}" onclick="submitMC(${idx},${oi})"><span class="quiz-option-letter">${'ABCD'[oi]}</span><span>${o}</span></button>`;
+    });
+    html+=`</div>`;
+  } else {
+    const saved = quizState.answers[idx]||'';
+    html+=`<div class="quiz-fill-wrap"><input type="text" class="quiz-fill-input" id="fill-input" placeholder="Type your answer here…" value="${saved}" ${answered?'disabled':''}></div>`;
+  }
+
+  const fbCls = quizState.results[idx]===true?'correct-fb':quizState.results[idx]===false?'wrong-fb':'';
+  const fbShow = answered?'show':'';
+  const fbText = answered?(quizState.results[idx]?`✓ Correct! ${q.explain}`:`✗ ${q.type==='fill'?`Correct answer: <span class="fb-answer">${q.correct}</span>. `:''}${q.explain}`):'';
+  html+=`<div class="quiz-feedback ${fbCls} ${fbShow}">${fbText}</div>`;
+
+  html+=`<div class="quiz-nav">`;
+  if(!answered){
+    if(q.type==='mc'){
+      html+=`<button class="btn-quiz skip" onclick="skipQuestion(${idx})">Skip →</button>`;
+    } else {
+      html+=`<button class="btn-quiz primary" onclick="submitFill(${idx})">Submit</button>`;
+      html+=`<button class="btn-quiz skip" onclick="skipQuestion(${idx})">Skip →</button>`;
+    }
+  } else {
+    if(idx<total-1) html+=`<button class="btn-quiz primary" onclick="renderQuestion(${idx+1})">Next →</button>`;
+    else html+=`<button class="btn-quiz primary" onclick="showResults()">See Results 🏁</button>`;
+  }
+  if(idx>0) html+=`<button class="btn-quiz secondary" onclick="renderQuestion(${idx-1})" style="order:-1">← Prev</button>`;
+  html+=`</div>`;
+
+  el.innerHTML=html;
+  if(!answered && q.type==='fill'){
+    document.getElementById('fill-input').addEventListener('keydown',e=>{if(e.key==='Enter')submitFill(idx);});
+  }
+}
+
+function submitMC(qIdx,optIdx){
+  if(quizState.results.hasOwnProperty(qIdx))return;
+  const q=QUIZ_QUESTIONS[qIdx];
+  quizState.answers[qIdx]=optIdx;
+  quizState.results[qIdx]=optIdx===q.correct;
+  quizState.skipped.delete(qIdx);
+  renderQuestion(qIdx);
+}
+
+function submitFill(qIdx){
+  if(quizState.results.hasOwnProperty(qIdx))return;
+  const input=document.getElementById('fill-input');
+  const val=(input?input.value:'').trim().toLowerCase();
+  if(!val){input&&input.focus();return;}
+  const q=QUIZ_QUESTIONS[qIdx];
+  const correct=val===q.correct.toLowerCase()||(q.acceptAlt&&q.acceptAlt.some(a=>val.includes(a.split(',')[1].trim())||val===a));
+  quizState.answers[qIdx]=val;
+  quizState.results[qIdx]=correct;
+  quizState.skipped.delete(qIdx);
+  renderQuestion(qIdx);
+}
+
+function skipQuestion(idx){
+  quizState.skipped.add(idx);
+  const next = idx<QUIZ_QUESTIONS.length-1?idx+1:0;
+  renderQuestion(next);
+}
+
+function showResults(){
+  const total=QUIZ_QUESTIONS.length;
+  const answered=Object.keys(quizState.results).length;
+  const correct=Object.values(quizState.results).filter(Boolean).length;
+  const wrong=Object.values(quizState.results).filter(v=>v===false).length;
+  const skipped=total-answered;
+  const pct=Math.round(correct/total*100);
+  const grade=pct>=90?'A*':pct>=80?'A':pct>=70?'B':pct>=60?'C':pct>=50?'D':'U';
+  const msg=pct>=80?'Excellent work! You have a strong grasp of mass spectrometry.':pct>=60?'Good effort! Review the sections you found difficult.':pct>=40?'Keep studying — revisit the notes and try again.':'More practice needed — the notes cover all these topics!';
+
+  const ringStyle=`background:conic-gradient(var(--cyan) ${pct*3.6}deg, var(--bg4) 0deg)`;
+  let reviewHtml=QUIZ_QUESTIONS.map((q,i)=>{
+    if(!quizState.results.hasOwnProperty(i)) return `<div class="review-item ri-skip"><div class="ri-q">Q${i+1}: ${q.q}</div><div class="ri-answer" style="color:var(--orange)">⊘ Skipped</div></div>`;
+    if(quizState.results[i]) return `<div class="review-item ri-correct"><div class="ri-q">Q${i+1}: ${q.q}</div><div class="ri-answer ri-correct-text">✓ Correct</div></div>`;
+    return `<div class="review-item ri-wrong"><div class="ri-q">Q${i+1}: ${q.q}</div><div class="ri-answer">✗ Your answer: ${quizState.answers[i]!==undefined?quizState.answers[i]:'-'} &nbsp;|&nbsp; <span class="ri-correct-text">Correct: ${q.type==='mc'?q.opts[q.correct]:q.correct}</span></div></div>`;
+  }).join('');
+
+  document.getElementById('quiz-card').style.display='none';
+  document.getElementById('quiz-header').style.display='none';
+  document.getElementById('question-map').style.display='none';
+
+  const res=document.getElementById('quiz-results');
+  res.innerHTML=`
+<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:32px;text-align:center">
+<div style="font-family:var(--font-head);font-size:1.3rem;color:var(--cyan);margin-bottom:16px">Quiz Complete!</div>
+<div class="result-score-ring" style="${ringStyle}">
+  <div class="result-score-inner"><div class="result-score-pct">${pct}%</div><div class="result-score-label">SCORE</div></div>
+</div>
+<div class="result-grade" style="color:${pct>=70?'var(--green)':pct>=50?'var(--gold)':'var(--red)'}">Grade: ${grade}</div>
+<div class="result-message">${msg}</div>
+<div class="result-stats">
+  <div class="result-stat"><div class="result-stat-val" style="color:var(--green)">${correct}</div><div class="result-stat-label">Correct</div></div>
+  <div class="result-stat"><div class="result-stat-val" style="color:var(--red)">${wrong}</div><div class="result-stat-label">Wrong</div></div>
+  <div class="result-stat"><div class="result-stat-val" style="color:var(--orange)">${skipped}</div><div class="result-stat-label">Skipped</div></div>
+  <div class="result-stat"><div class="result-stat-val" style="color:var(--cyan)">${total}</div><div class="result-stat-label">Total</div></div>
+</div>
+<button class="btn-quiz primary" onclick="resetQuiz();document.getElementById('quiz-results').classList.remove('show');document.getElementById('quiz-header').style.display='';document.getElementById('question-map').style.display='';" style="margin:8px auto;display:inline-block">↺ Try Again</button>
+</div>
+<div class="review-list">${reviewHtml}</div>`;
+  res.classList.add('show');
+}
+
+// ═══════════════════════════════════════════════════
+//  REFERENCE TAB
+// ═══════════════════════════════════════════════════
+const REF_CARDS = [
+  {title:'Diagnostic Base Peaks', html:`
+<table class="note-table"><tr><th>m/z</th><th>Ion</th><th>Compound Class</th></tr>
+<tr><td style="color:#33ff99">15</td><td>[CH₃]⁺</td><td>All compounds with CH₃</td></tr>
+<tr><td style="color:#33ff99">29</td><td>[CHO]⁺</td><td>Aldehydes (diagnostic)</td></tr>
+<tr><td style="color:#33ff99">30</td><td>[CH₂=NH₂]⁺</td><td>Primary amines (diagnostic)</td></tr>
+<tr><td style="color:#33ff99">31</td><td>[CH₂OH]⁺</td><td>Primary alcohols (diagnostic)</td></tr>
+<tr><td style="color:#33ff99">43</td><td>[CH₃CO]⁺</td><td>Methyl ketones &amp; acetate esters</td></tr>
+<tr><td style="color:#33ff99">45</td><td>[COOH]⁺</td><td>All carboxylic acids (diagnostic)</td></tr>
+<tr><td style="color:#33ff99">77</td><td>[C₆H₅]⁺</td><td>Phenyl group</td></tr>
+<tr><td style="color:#33ff99">91</td><td>[C₇H₇]⁺</td><td>Tropylium → alkylbenzenes</td></tr>
+</table>`},
+  {title:'Common Neutral Losses (M − x)', html:`
+<table class="note-table"><tr><th>Loss</th><th>Δm/z</th><th>Fragment Lost</th></tr>
+<tr><td>M − 1</td><td>1</td><td>H•</td></tr>
+<tr><td>M − 14</td><td>14</td><td>CH₂ (one alkyl unit)</td></tr>
+<tr><td>M − 15</td><td>15</td><td>CH₃•</td></tr>
+<tr><td>M − 17</td><td>17</td><td>OH•</td></tr>
+<tr><td>M − 18</td><td>18</td><td>H₂O (dehydration)</td></tr>
+<tr><td>M − 28</td><td>28</td><td>CO (carbonyl) or C₂H₄ (McLafferty)</td></tr>
+<tr><td>M − 29</td><td>29</td><td>CHO• or C₂H₅•</td></tr>
+<tr><td>M − 31</td><td>31</td><td>OCH₃•</td></tr>
+<tr><td>M − 43</td><td>43</td><td>CH₃CO•</td></tr>
+<tr><td>M − 45</td><td>45</td><td>OC₂H₅•</td></tr>
+</table>`},
+  {title:'Isotope Patterns for Halogens', html:`
+<table class="note-table"><tr><th>Halogen</th><th>Peaks</th><th>Ratio</th></tr>
+<tr><td>1 × Cl</td><td>M, M+2</td><td>3 : 1</td></tr>
+<tr><td>2 × Cl</td><td>M, M+2, M+4</td><td>9 : 6 : 1</td></tr>
+<tr><td>1 × Br</td><td>M, M+2</td><td>~1 : 1</td></tr>
+<tr><td>2 × Br</td><td>M, M+2, M+4</td><td>1 : 2 : 1</td></tr>
+<tr><td>Cl + Br</td><td>M, M+2, M+2, M+4</td><td>complex</td></tr>
+</table>
+<div class="note-tip" style="margin-top:10px;font-size:0.8rem">³⁵Cl = 75.5%, ³⁷Cl = 24.5% → 3:1 &nbsp;|&nbsp; ⁷⁹Br = 50.7%, ⁸¹Br = 49.3% → ~1:1</div>`},
+  {title:'Counting Carbons: M+1 Peak', html:`
+<div class="note-formula" style="font-size:0.85rem">n = (M+1 abundance / M⁺ abundance) × (100 / 1.1)</div>
+<p style="font-size:0.83rem;color:var(--txt2);margin-top:8px">Each carbon atom contributes <strong style="color:var(--orange)">1.1%</strong> to the M+1 peak (due to ¹³C natural abundance).</p>
+<table class="note-table" style="margin-top:8px"><tr><th>M+1 %</th><th>No. of C</th></tr>
+<tr><td>1.1%</td><td>1</td></tr><tr><td>2.2%</td><td>2</td></tr>
+<tr><td>3.3%</td><td>3</td></tr><tr><td>4.4%</td><td>4</td></tr>
+<tr><td>5.5%</td><td>5</td></tr><tr><td>6.6%</td><td>6</td></tr>
+<tr><td>7.7%</td><td>7</td></tr></table>`},
+  {title:'Nitrogen Rule', html:`
+<div class="note-highlight" style="font-size:0.85rem"><strong>If M⁺ is ODD → ODD number of N atoms</strong><br>If M⁺ is EVEN → EVEN number of N atoms (0, 2, 4…)</div>
+<table class="note-table" style="margin-top:10px"><tr><th>Compound</th><th>M⁺</th><th>N atoms</th></tr>
+<tr><td>Ethylamine C₂H₇N</td><td>45 (odd)</td><td>1 (odd)</td></tr>
+<tr><td>Propylamine C₃H₉N</td><td>59 (odd)</td><td>1 (odd)</td></tr>
+<tr><td>Ethane C₂H₆</td><td>30 (even)</td><td>0 (even)</td></tr>
+<tr><td>Glycine C₂H₅NO₂</td><td>75 (odd)</td><td>1 (odd)</td></tr>
+</table>`},
+  {title:'Fragmentation Summary by Class', html:`
+<table class="note-table"><tr><th>Class</th><th>Key Fragmentation</th><th>Base Peak</th></tr>
+<tr><td>Alkanes</td><td>C–C cleavage, Δ14</td><td>Middle-chain CₙH₂ₙ₊₁⁺</td></tr>
+<tr><td>Alkenes</td><td>Allylic (β) cleavage</td><td>[allyl]⁺ m/z 41</td></tr>
+<tr><td>Benzene</td><td>Minimal fragmentation</td><td>M⁺ itself (m/z 78)</td></tr>
+<tr><td>Alkylbenzene</td><td>Benzyl → tropylium</td><td>Tropylium m/z 91</td></tr>
+<tr><td>Primary alcohol</td><td>α-cleavage → [CH₂OH]⁺</td><td>m/z 31</td></tr>
+<tr><td>Secondary alcohol</td><td>α-cleavage → larger ion</td><td>M−R (varies)</td></tr>
+<tr><td>Aldehyde</td><td>α-cleavage → [CHO]⁺</td><td>m/z 29</td></tr>
+<tr><td>Ketone</td><td>α-cleavage → [RCO]⁺</td><td>Acylium ion</td></tr>
+<tr><td>Carboxylic acid</td><td>α-cleavage → [COOH]⁺</td><td>m/z 45</td></tr>
+<tr><td>Amine (1°)</td><td>α-cleavage → [CH₂NH₂]⁺</td><td>m/z 30</td></tr>
+</table>`},
+  {title:'Exact Masses for High-Res MS', html:`
+<table class="note-table"><tr><th>Atom</th><th>Exact Mass</th></tr>
+<tr><td>¹²C</td><td>12.0000 (defined)</td></tr>
+<tr><td>¹H</td><td>1.00783</td></tr>
+<tr><td>¹⁶O</td><td>15.9949</td></tr>
+<tr><td>¹⁴N</td><td>14.0031</td></tr>
+<tr><td>³²S</td><td>31.9721</td></tr>
+<tr><td>³⁵Cl</td><td>34.9689</td></tr>
+<tr><td>⁷⁹Br</td><td>78.9183</td></tr>
+</table>
+<div class="note-tip" style="font-size:0.8rem;margin-top:8px">Example: C₂H₆O (ethanol) = 2(12.000)+6(1.00783)+15.9949 = 46.0418</div>`},
+  {title:'5-Step Spectrum Interpretation', html:`
+<ol style="font-size:0.85rem;color:var(--txt);padding-left:18px;line-height:2">
+<li>Find <strong style="color:var(--orange)">M⁺</strong> → molecular mass</li>
+<li>Check <strong style="color:var(--orange)">odd/even</strong> → Nitrogen Rule</li>
+<li>Look for <strong style="color:var(--orange)">M+2 pattern</strong> → Cl (3:1) or Br (1:1)</li>
+<li>Identify <strong style="color:var(--orange)">base peak</strong> → functional group</li>
+<li>Calculate <strong style="color:var(--orange)">M+1 %</strong> → number of carbons</li>
+</ol>
+<div class="note-tip" style="font-size:0.8rem;margin-top:8px">Bonus: check for M−15, M−18, M−28, M−29 to identify common losses.</div>`}
+];
+
+function renderReference(){
+  const el=document.getElementById('ref-layout');
+  el.innerHTML=REF_CARDS.map(c=>`
+<div class="ref-card">
+  <h3>${c.title}</h3>
+  ${c.html}
+</div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════
+//  TAB NAVIGATION
+// ═══════════════════════════════════════════════════
+document.querySelectorAll('.nav-tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const tab=btn.dataset.tab;
+    document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+tab).classList.add('active');
+    if(tab==='simulator'&&currentCompound) setTimeout(renderSpectrum,50);
+  });
+});
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+async function init(){
+  renderNotes();
+  renderReference();
+  await loadCompounds();
+  initQuiz();
+  // Auto-select first compound
+  if(compounds.length){
+    selectCompound(compounds[0].id);
+  }
+  document.getElementById('loading-overlay').style.opacity='0';
+  document.getElementById('loading-overlay').style.transition='opacity 0.5s';
+  setTimeout(()=>document.getElementById('loading-overlay').style.display='none',500);
+}
+
+init();
+</script>
+</body>
+</html>
