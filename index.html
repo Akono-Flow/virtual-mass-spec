@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MassSpec — Interactive Mass Spectrometry Learning Platform</title>
+  <!-- SCQ Auth System — add these in this order -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://akono-gate-flow.learnwithcole.com/js/config.js"></script>
+<script src="https://akono-gate-flow.learnwithcole.com/js/auth.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800&family=Share+Tech+Mono&family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
@@ -231,6 +235,15 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--txt);min-height
 </style>
 </head>
 <body>
+  <div id="page-loader" style="
+  position:fixed;inset:0;background:#050911;
+  display:flex;align-items:center;justify-content:center;
+  z-index:9999;font-family:monospace;color:#2563eb;font-size:1.1rem;
+  flex-direction:column;gap:12px;
+">
+  <span style="font-size:2rem">🔒</span>
+  Verifying access…
+</div>
 <div id="loading-overlay"><div class="spinner"></div><div class="loading-text">INITIALIZING MASS SPEC PLATFORM...</div></div>
 <div id="chart-tooltip"><div class="tt-mz"></div><div class="tt-formula"></div><div class="tt-type"></div><div class="tt-abu"></div></div>
 
@@ -1331,7 +1344,19 @@ async function init(){
   setTimeout(()=>document.getElementById('loading-overlay').style.display='none',500);
 }
 
-init();
+  document.addEventListener('DOMContentLoaded', async () => {
+
+  // ── Replace 'YOUR_SLUG_HERE' with the slug you register in Step 5 ──
+  const auth = await requireAppAccess('mspec', 'no-access.html');
+  if (!auth) return;   // auth handles the redirect; just stop here
+
+  // Remove the loading overlay
+  const loader = document.getElementById('page-loader');
+  if (loader) loader.remove();
+
+  await init();
+
+});
 </script>
 </body>
 </html>
